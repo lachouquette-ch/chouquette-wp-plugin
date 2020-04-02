@@ -1,7 +1,54 @@
 <?php
-if (!function_exists('chouquette_fiche_post_type')) :
-	function chouquette_fiche_post_type()
-	{
+
+/**
+ * The registration functionality of the plugin.
+ *
+ * @since      	1.0.0
+ * @package    	Chouquette_WP_Plugin
+ * @subpackage 	Chouquette_WP_Plugin/register
+ * @author		Fabrice Douchant <fabrice.douchant@gmail.com>
+ */
+class Chouquette_WP_Plugin_Register {
+
+	/**
+	 * The ID of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $plugin_name    The ID of this plugin.
+	 */
+	private $plugin_name;
+
+	/**
+	 * The version of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 * @var      string    $version    The current version of this plugin.
+	 */
+	private $version;
+
+	/**
+	 * Initialize the class and set its properties.
+	 *
+	 * @since    1.0.0
+	 * @param      string    $plugin_name       The name of the plugin.
+	 * @param      string    $version    The version of this plugin.
+	 */
+	public function __construct( $plugin_name, $version ) {
+
+		$this->plugin_name = $plugin_name;
+		$this->version = $version;
+
+	}
+
+	/**
+	 * Register the post type 'fiche'.
+	 *
+	 * @since    1.0.0
+	 */
+	public function fiche_post_type() {
+
 		$labels = array(
 			'name' => _x('Fiches', 'Post Type General Name', 'chouquette'),
 			'singular_name' => _x('Fiche', 'Post Type Singular Name', 'chouquette'),
@@ -15,7 +62,7 @@ if (!function_exists('chouquette_fiche_post_type')) :
 			'label' => __('Fiche', 'chouquette'),
 			'description' => __('Fiche Chouquette', 'chouquette'),
 			'labels' => $labels,
-			'supports' => array('title', 'thumbnail', 'editor', 'revisions', 'custom_post-fields'),
+			'supports' => array('title', 'thumbnail', 'editor', 'revisions', 'register-fields'),
 			'taxonomies' => array('category', 'post_tag'),
 			'hierarchical' => false,
 			'public' => true,
@@ -37,6 +84,15 @@ if (!function_exists('chouquette_fiche_post_type')) :
 		);
 		register_post_type('fiche', $args);
 
+	}
+
+	/**
+	 * Register the taxonomy 'icon-info'.
+	 *
+	 * @since    1.0.0
+	 */
+	public function icon_info_taxonomy() {
+
 		register_taxonomy(
 			'icon-info',
 			'fiche',
@@ -49,28 +105,7 @@ if (!function_exists('chouquette_fiche_post_type')) :
 				'hierarchical' => true
 			)
 		);
+
 	}
 
-	add_action('init', 'chouquette_fiche_post_type', 0);
-endif;
-
-if (!function_exists('chouquette_filter_by_fiche')):
-	function chouquette_filter_by_fiche($query)
-	{
-		if (!is_admin() && $query->is_main_query() && isset($_GET['lf'])) {
-			$my_meta = array(
-				'key' => 'link_fiche',
-				'value' => '"' . $_GET['lf'] . '"',
-				'compare' => 'LIKE'
-			);
-			$meta_query = $query->get('meta_query');
-			if (!empty($meta_query)) {
-				$meta_query[] = $my_meta;
-				$query->set('meta_query', $meta_query);
-			} else {
-				$meta_query = array($my_meta);
-				$query->set('meta_query', $meta_query);
-			}
-		}
-	}
-endif;
+}
