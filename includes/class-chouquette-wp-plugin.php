@@ -61,6 +61,7 @@ class Chouquette_WP_Plugin {
 		$this->load_dependencies();
 		$this->define_config_hooks();
 		$this->define_register_hooks();
+		$this->define_rest_hooks();
 
 	}
 
@@ -87,6 +88,8 @@ class Chouquette_WP_Plugin {
 
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'register/class-chouquette-wp-plugin-register.php';
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'rest/class-chouquette-wp-plugin-rest.php';
+
 		$this->loader = new Chouquette_WP_Plugin_Loader();
 
 	}
@@ -102,6 +105,20 @@ class Chouquette_WP_Plugin {
 		$plugin_config = new Chouquette_WP_Plugin_Config( $this->get_plugin_name(), $this->get_version() );
 
 		$this->loader->add_filter( 'acf/fields/google_map/api', $plugin_config, 'acf_fields_google_map_api' );
+
+	}
+
+	/**
+	 * Register all of the hooks related to the rest functionality of the plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_rest_hooks() {
+
+		$plugin_rest = new Chouquette_WP_Plugin_Rest( $this->get_plugin_name(), $this->get_version() );
+
+		$this->loader->add_action( 'rest_api_init', $plugin_rest, 'post_top_categories' );
 
 	}
 
