@@ -5,10 +5,10 @@
  *
  * @since        1.0.0
  * @package        Chouquette_WP_Plugin
- * @subpackage    Chouquette_WP_Plugin/rest/lib
+ * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Rest_Fiche
+class Chouquette_WP_Plugin_Lib_Fiche
 {
 
 	const POST_FICHE_FIELD = 'link_fiche';
@@ -21,7 +21,8 @@ class Chouquette_WP_Plugin_Rest_Fiche
 	 *
 	 * @return array of posts (fiches) sorted (chouquettise last). Empty array if none.
 	 */
-	public static function get_all_by_post($post) {
+	public static function get_all_by_post($post)
+	{
 
 		$fiches = get_field(self::POST_FICHE_FIELD, $post);
 
@@ -48,6 +49,8 @@ class Chouquette_WP_Plugin_Rest_Fiche
 	 * @param $fiche_id the id of the fiche
 	 *
 	 * @return true of false if the fiche is chouquettise
+	 *
+	 * @throws Exception
 	 */
 	public static function is_chouquettise(int $fiche_id)
 	{

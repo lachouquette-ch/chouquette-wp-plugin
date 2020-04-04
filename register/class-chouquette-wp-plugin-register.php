@@ -3,19 +3,20 @@
 /**
  * The registration functionality of the plugin.
  *
- * @since      	1.0.0
- * @package    	Chouquette_WP_Plugin
- * @subpackage 	Chouquette_WP_Plugin/register
- * @author		Fabrice Douchant <fabrice.douchant@gmail.com>
+ * @since        1.0.0
+ * @package        Chouquette_WP_Plugin
+ * @subpackage    Chouquette_WP_Plugin/register
+ * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Register {
+class Chouquette_WP_Plugin_Register
+{
 
 	/**
 	 * The ID of this plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
+	 * @var      string $plugin_name The ID of this plugin.
 	 */
 	private $plugin_name;
 
@@ -24,18 +25,19 @@ class Chouquette_WP_Plugin_Register {
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
+	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
+	 * @param string $plugin_name The name of the plugin.
+	 * @param string $version The version of this plugin.
 	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version)
+	{
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
@@ -47,7 +49,8 @@ class Chouquette_WP_Plugin_Register {
 	 *
 	 * @since    1.0.0
 	 */
-	public function fiche_post_type() {
+	public function fiche_post_type()
+	{
 
 		$labels = array(
 			'name' => _x('Fiches', 'Post Type General Name', 'chouquette'),
@@ -91,7 +94,8 @@ class Chouquette_WP_Plugin_Register {
 	 *
 	 * @since    1.0.0
 	 */
-	public function icon_info_taxonomy() {
+	public function icon_info_taxonomy()
+	{
 
 		register_taxonomy(
 			'icon-info',

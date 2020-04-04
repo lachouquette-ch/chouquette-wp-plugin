@@ -3,12 +3,13 @@
 /**
  * Fired during plugin activation
  *
- * @since      	1.0.0
- * @package    	Chouquette_WP_Plugin
- * @subpackage 	Chouquette_WP_Plugin/includes
- * @author		Fabrice Douchant <fabrice.douchant@gmail.com>
+ * @since        1.0.0
+ * @package        Chouquette_WP_Plugin
+ * @subpackage    Chouquette_WP_Plugin/includes
+ * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Activator {
+class Chouquette_WP_Plugin_Activator
+{
 
 	/**
 	 * Short Description. (use period)
@@ -17,7 +18,8 @@ class Chouquette_WP_Plugin_Activator {
 	 *
 	 * @since    1.0.0
 	 */
-	public static function activate() {
+	public static function activate()
+	{
 
 	}
 

@@ -42,9 +42,6 @@ class Chouquette_WP_Plugin_Rest
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
-		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/lib/category.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/lib/fiche.php';
-
 	}
 
 	/**
@@ -55,15 +52,20 @@ class Chouquette_WP_Plugin_Rest
 	public function post_top_categories()
 	{
 
-		register_rest_field('post', 'topCategories', array(
+		register_rest_field('post', 'top_categories', array(
 			'get_callback' => function ($post_arr) {
-				$categories = Chouquette_WP_Plugin_Rest_Category::get_all_by_post($post_arr['id']);
-				return $categories;
-			},
+				$categories = Chouquette_WP_Plugin_Lib_Category::get_all_by_post($post_arr['id']);
 
+				return array_map(function ($category) {
+					return $category->term_id;
+				}, $categories);
+			},
 			'schema' => array(
-				'description' => __('Get top categories.'),
-				'type' => 'Object'
+				'description' => __('Gets all categories from related posts (or from post if none). Primary category (yoast) firsts if any.'),
+				'type' => 'array',
+				'items' => array(
+					'type' => 'integer'
+				)
 			),
 		));
 

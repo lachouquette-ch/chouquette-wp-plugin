@@ -6,7 +6,7 @@
  * The Plugin provides all necessary custom post types, hooks and rest endpoints for La Chouquette plateform
  * Project structure inspired by https://github.com/DevinVinson/WordPress-Plugin-Boilerplate
  *
- * @since 	1.0.0
+ * @since    1.0.0
  * @package Chouquette_WP_Plugin
  *
  * @wordpress-plugin
@@ -20,21 +20,22 @@
  */
 
 // exit if accessed directly
-if( ! defined( 'WPINC' ) ) {
+if (!defined('WPINC')) {
 	die;
 }
 
 /**
  * Currently plugin version.
  */
-define( 'CHOUQUETTE_WP_PLUGIN_VERSION', '1.0.0' );
+define('CHOUQUETTE_WP_PLUGIN_VERSION', '1.0.0');
 
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-plugin-name-activator.php
  */
-function activate_chouquette_wp_plugin() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-chouquette-wp-plugin-activator.php';
+function activate_chouquette_wp_plugin()
+{
+	require_once plugin_dir_path(__FILE__) . 'includes/class-chouquette-wp-plugin-activator.php';
 	Chouquette_WP_Plugin_Activator::activate();
 }
 
@@ -42,19 +43,20 @@ function activate_chouquette_wp_plugin() {
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-chouquette-wp-plugin-deactivator.php
  */
-function deactivate_chouquette_wp_plugin() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-chouquette-wp-plugin-deactivator.php';
+function deactivate_chouquette_wp_plugin()
+{
+	require_once plugin_dir_path(__FILE__) . 'includes/class-chouquette-wp-plugin-deactivator.php';
 	Chouquette_WP_Plugin_Deactivator::deactivate();
 }
 
-register_activation_hook( __FILE__, 'activate_chouquette_wp_plugin' );
-register_deactivation_hook( __FILE__, 'deactivate_chouquette_wp_plugin' );
+register_activation_hook(__FILE__, 'activate_chouquette_wp_plugin');
+register_deactivation_hook(__FILE__, 'deactivate_chouquette_wp_plugin');
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-chouquette-wp-plugin.php';
+require plugin_dir_path(__FILE__) . 'includes/class-chouquette-wp-plugin.php';
 
 /**
  * Begins execution of the plugin.
@@ -65,10 +67,12 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-chouquette-wp-plugin.php';
  *
  * @since    1.0.0
  */
-function run_chouquette_wp_plugin() {
+function run_chouquette_wp_plugin()
+{
 
 	$plugin = new Chouquette_WP_Plugin();
 	$plugin->run();
 
 }
+
 run_chouquette_wp_plugin();
