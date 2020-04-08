@@ -55,6 +55,7 @@ class Chouquette_WP_Plugin_Rest
 
 		// link_fiche
 		register_meta( 'post', 'link_fiche', array (
+			'single' => true,
 			'show_in_rest' => array (
 				'schema' => array (
 					'type'  => 'array',
@@ -64,6 +65,10 @@ class Chouquette_WP_Plugin_Rest
 				),
 			),
 		) );
+
+		register_meta ('term', 'logo_yellow', array ( 'object_subtype' => 'category', 'single' => true, 'show_in_rest' => true ));
+		register_meta ('term', 'logo_white', array ( 'object_subtype' => 'category', 'single' => true, 'show_in_rest' => true ));
+		register_meta ('term', 'logo_black', array ( 'object_subtype' => 'category', 'single' => true, 'show_in_rest' => true ));
 
 	}
 
