@@ -42,6 +42,29 @@ class Chouquette_WP_Plugin_Rest
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		// allow public comments
+		add_filter( 'rest_allow_anonymous_comments', '__return_true' );
+
+	}
+
+	/**
+	 * Register existing meta fields to show in rest
+	 */
+	public function register_meta()
+	{
+
+		// link_fiche
+		register_meta( 'post', 'link_fiche', array (
+			'show_in_rest' => array (
+				'schema' => array (
+					'type'  => 'array',
+					'items' => array(
+						'type' => 'number',
+					),
+				),
+			),
+		) );
+
 	}
 
 	/**

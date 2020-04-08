@@ -125,8 +125,7 @@ class Chouquette_WP_Plugin
 
 		$plugin_rest = new Chouquette_WP_Plugin_Rest($this->get_plugin_name(), $this->get_version());
 
-		// allow public comments
-		add_filter( 'rest_allow_anonymous_comments', '__return_true' );
+		$plugin_rest->register_meta();
 
 		$this->loader->add_filter('rest_pre_insert_comment', $plugin_rest, 'validate_comment_recaptcha', 10, 2);
 
