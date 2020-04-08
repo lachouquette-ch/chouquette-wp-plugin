@@ -66,10 +66,6 @@ class Chouquette_WP_Plugin_Rest
 			),
 		) );
 
-		register_meta ('term', 'logo_yellow', array ( 'object_subtype' => 'category', 'single' => true, 'show_in_rest' => true ));
-		register_meta ('term', 'logo_white', array ( 'object_subtype' => 'category', 'single' => true, 'show_in_rest' => true ));
-		register_meta ('term', 'logo_black', array ( 'object_subtype' => 'category', 'single' => true, 'show_in_rest' => true ));
-
 	}
 
 	/**
@@ -93,6 +89,34 @@ class Chouquette_WP_Plugin_Rest
 				'type' => 'array',
 				'items' => array(
 					'type' => 'integer'
+				)
+			),
+		));
+
+	}
+
+	/**
+	 * Register the google map API key to the acf fields plugin.
+	 *
+	 * @since    1.0.0
+	 */
+	public function category_logos()
+	{
+
+		register_rest_field('category', 'logos', array(
+			'get_callback' => function ($comment_arr) {
+				$data = array();
+				$data['logo_yellow'] = intval(get_field('logo_yellow', "category_{$comment_arr['id']}"));
+				$data['logo_black'] = intval(get_field('logo_black', "category_{$comment_arr['id']}"));
+				$data['logo_white'] = intval(get_field('logo_white', "category_{$comment_arr['id']}"));
+
+				return $data;
+			},
+			'schema' => array(
+				'description' => __('Category logos per color'),
+				'type' => 'array',
+				'items' => array(
+					'type' => 'number'
 				)
 			),
 		));

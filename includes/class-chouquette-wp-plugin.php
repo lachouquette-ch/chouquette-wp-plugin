@@ -131,6 +131,8 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'post_top_categories');
 
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'category_logos');
+
 	}
 
 	/**
