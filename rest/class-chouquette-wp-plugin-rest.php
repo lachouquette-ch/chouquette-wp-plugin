@@ -71,4 +71,39 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
+	/**
+	 * Validate the comment with recatpcha v3 token
+	 *
+	 * @param $prepared_comment array the prepared comment
+	 * @param $request WP_REST_Request the request
+	 * @return WP_Error if comment is not validated or request is invalid
+	 */
+	public function validate_comment_recaptcha($prepared_comment, WP_REST_Request $request) {
+		// validate recaptcha
+		if ( empty( $request['recaptcha'] ) ) {
+			return new WP_Error(
+				'rest_comment_recaptcha_required',
+				__( "La presence d'un token recaptcha est nécessaire pour la création d'un commentaire." ),
+				array( 'status' => 400 )
+			);
+		}
+		try {
+			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request['recaptcha'])) {
+				return new WP_Error(
+					'rest_comment_recaptcha_invalid',
+					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton commentaire. Merci de re-essayer."),
+					array('status' => 412)
+				);
+			}
+		} catch (Chouquette_WP_Plugin_Lib_Recaptcha_Exception $e) {
+			return new WP_Error(
+				'rest_comment_recaptcha_error',
+				$e->getMessage(),
+				array('status' => 412)
+			);
+		}
+
+		return $prepared_comment;
+	}
+
 }
