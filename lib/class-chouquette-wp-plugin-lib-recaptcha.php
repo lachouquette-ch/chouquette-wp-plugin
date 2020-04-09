@@ -1,6 +1,8 @@
 <?php
 
-class Chouquette_WP_Plugin_Lib_Recaptcha_Exception extends Exception {}
+class Chouquette_WP_Plugin_Lib_Recaptcha_Exception extends Exception
+{
+}
 
 /**
  * Helpers for recaptcha.
@@ -26,19 +28,19 @@ class Chouquette_WP_Plugin_Lib_Recaptcha
 	 */
 	public static function validateRecaptchaToken(string $recaptcha_token, float $min_score_success = 0.5)
 	{
-			// Make and decode POST request
-			$recaptcha = file_get_contents(Chouquette_WP_Plugin_Lib_Recaptcha::$recaptcha_verify_url . '?secret=' . Chouquette_WP_Plugin_Lib_Recaptcha::$recaptcha_secret . '&response=' . $recaptcha_token);
-			$recaptcha = json_decode($recaptcha);
+		// Make and decode POST request
+		$recaptcha = file_get_contents(Chouquette_WP_Plugin_Lib_Recaptcha::$recaptcha_verify_url . '?secret=' . Chouquette_WP_Plugin_Lib_Recaptcha::$recaptcha_secret . '&response=' . $recaptcha_token);
+		$recaptcha = json_decode($recaptcha);
 
-			// Take action based on the score returned:
-			if (!$recaptcha->success) {
-				throw new Chouquette_WP_Plugin_Lib_Recaptcha_Exception('Erreur recaptcha : ' . join(', ', $recaptcha->{'error-codes'}));
-			}
-			if (isset($recaptcha->score) && $recaptcha->score >= $min_score_success) {
-				return true;
-			} else {
-				return false;
-			}
+		// Take action based on the score returned:
+		if (!$recaptcha->success) {
+			throw new Chouquette_WP_Plugin_Lib_Recaptcha_Exception('Erreur recaptcha : ' . join(', ', $recaptcha->{'error-codes'}));
+		}
+		if (isset($recaptcha->score) && $recaptcha->score >= $min_score_success) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

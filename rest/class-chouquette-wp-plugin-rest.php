@@ -43,7 +43,7 @@ class Chouquette_WP_Plugin_Rest
 		$this->version = $version;
 
 		// allow public comments
-		add_filter( 'rest_allow_anonymous_comments', '__return_true' );
+		add_filter('rest_allow_anonymous_comments', '__return_true');
 
 	}
 
@@ -54,17 +54,17 @@ class Chouquette_WP_Plugin_Rest
 	{
 
 		// link_fiche
-		register_meta( 'post', 'link_fiche', array (
+		register_meta('post', 'link_fiche', array(
 			'single' => true,
-			'show_in_rest' => array (
-				'schema' => array (
-					'type'  => 'array',
+			'show_in_rest' => array(
+				'schema' => array(
+					'type' => 'array',
 					'items' => array(
 						'type' => 'number',
 					),
 				),
 			),
-		) );
+		));
 
 	}
 
@@ -130,13 +130,14 @@ class Chouquette_WP_Plugin_Rest
 	 * @param $request WP_REST_Request the request
 	 * @return WP_Error if comment is not validated or request is invalid
 	 */
-	public function validate_comment_recaptcha($prepared_comment, WP_REST_Request $request) {
+	public function validate_comment_recaptcha($prepared_comment, WP_REST_Request $request)
+	{
 		// validate recaptcha
-		if ( empty( $request['recaptcha'] ) ) {
+		if (empty($request['recaptcha'])) {
 			return new WP_Error(
 				'rest_comment_recaptcha_required',
-				__( "La presence d'un token recaptcha est nécessaire pour la création d'un commentaire." ),
-				array( 'status' => 400 )
+				__("La presence d'un token recaptcha est nécessaire pour la création d'un commentaire."),
+				array('status' => 400)
 			);
 		}
 		try {
