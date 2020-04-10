@@ -147,6 +147,7 @@ class Chouquette_WP_Plugin
 		$plugin_register = new Chouquette_WP_Plugin_Register($this->get_plugin_name(), $this->get_version());
 
 		$this->loader->add_action('init', $plugin_register, 'fiche_post_type');
+
 		$this->loader->add_action('init', $plugin_register, 'icon_info_taxonomy');
 
 	}

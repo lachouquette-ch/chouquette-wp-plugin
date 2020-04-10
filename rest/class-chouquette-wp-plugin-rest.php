@@ -96,7 +96,7 @@ class Chouquette_WP_Plugin_Rest
 	}
 
 	/**
-	 * Register the google map API key to the acf fields plugin.
+	 * Add logo fields to categories (though logos attribute).
 	 *
 	 * @since    1.0.0
 	 */
@@ -105,12 +105,9 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_field('category', 'logos', array(
 			'get_callback' => function ($comment_arr) {
-				$data = array();
-				$data['logo_yellow'] = intval(get_field('logo_yellow', "category_{$comment_arr['id']}"));
-				$data['logo_black'] = intval(get_field('logo_black', "category_{$comment_arr['id']}"));
-				$data['logo_white'] = intval(get_field('logo_white', "category_{$comment_arr['id']}"));
+				$fields = get_field_object('logos', "category_{$comment_arr['id']}");
 
-				return $data;
+				return $fields['value'];
 			},
 			'schema' => array(
 				'description' => __('Category logos per color'),
