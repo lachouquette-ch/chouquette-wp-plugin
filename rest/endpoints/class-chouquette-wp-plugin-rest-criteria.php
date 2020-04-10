@@ -29,6 +29,17 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 				),
 			)
 		));
+		register_rest_route($namespace, '/' . $base . '/fiche' . '/(?P<id>[\d]+)', array(
+			array(
+				'methods' => WP_REST_Server::READABLE,
+				'callback' => array($this, 'get_item_for_fiche'),
+				'args' => array(
+					'context' => array(
+						'default' => 'view',
+					),
+				),
+			)
+		));
 		register_rest_route($namespace, '/' . $base . '/category' . '/(?P<id>[\d]+)', array(
 			array(
 				'methods' => WP_REST_Server::READABLE,
@@ -39,10 +50,6 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 					),
 				),
 			)
-		));
-		register_rest_route($namespace, '/' . $base . '/schema', array(
-			'methods' => WP_REST_Server::READABLE,
-			'callback' => array($this, 'get_public_item_schema'),
 		));
 	}
 
@@ -83,6 +90,38 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		} else {
 			return new WP_Error('code', __('message', 'text-domain'));
 		}
+	}
+
+	/**
+	 * Get one item from the collection
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item_for_fiche($request)
+	{
+		return new WP_Error(
+			'invalid-method',
+			/* translators: %s: Method name. */
+			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
+			array( 'status' => 405 )
+		);
+	}
+
+	/**
+	 * Get one item from the collection
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item_for_category($request)
+	{
+		return new WP_Error(
+			'invalid-method',
+			/* translators: %s: Method name. */
+			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
+			array( 'status' => 405 )
+		);
 	}
 
 	/**
