@@ -133,6 +133,8 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'category_logos');
 
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_info');
+
 	}
 
 	/**

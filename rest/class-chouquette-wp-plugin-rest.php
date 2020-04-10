@@ -156,4 +156,40 @@ class Chouquette_WP_Plugin_Rest
 		return $prepared_comment;
 	}
 
+	/**
+	 * Add info fields to fiches (though logos attribute).
+	 *
+	 * @since    1.0.0
+	 */
+	public function fiche_info()
+	{
+
+		register_rest_field('fiche', 'info', array(
+			'get_callback' => function ($fiche_arr) {
+				$fiche_id = $fiche_arr['id'];
+
+				$fields_basic = ['telephone', 'mail', 'website', 'location', 'cost'];
+				$fields_social_networks = ['sn_twitter', 'sn_facebook', 'sn_instagram', 'sn_printerest', 'sn_linkedin'];
+				$fields_openings = ['opening_monday', 'opening_tuesday', 'opening_wednesday', 'opening_thursday', 'opening_friday', 'opening_saturday', 'opening_sunday'];
+
+				$fields = $fields_basic;
+
+				if (Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id)) {
+					$fields = array_merge($fields, $fields_social_networks, $fields_openings);
+				}
+
+				$data = Chouquette_WP_Plugin_Lib_ACF::getValues($fields, $fiche_id);
+				// add chouquettise value
+				$data['chouquettise'] = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
+
+				return $data;
+			},
+			'schema' => array(
+				'description' => __('Fiche info (some attributes are only show if fiche is \'chouquettisée\''),
+				'type' => 'object'
+			),
+		));
+
+	}
+
 }

@@ -12,3 +12,4 @@
 require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-category.php';
 require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-fiche.php';
 require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-recaptcha.php';
+require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-acf.php';
