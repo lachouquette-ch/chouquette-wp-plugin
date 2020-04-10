@@ -30,6 +30,15 @@ class Chouquette_WP_Plugin_Rest
 	private $version;
 
 	/**
+	 * The criteria controller instance
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      Chouquette_WP_Plugin_Rest_Criteria $criteria_controller REST Controller for criteria.
+	 */
+	protected $criteria_controller;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @param string $plugin_name The name of the plugin.
@@ -42,8 +51,28 @@ class Chouquette_WP_Plugin_Rest
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$this->load_dependencies();
+
 		// allow public comments
 		add_filter('rest_allow_anonymous_comments', '__return_true');
+
+	}
+
+	/**
+	 * Load the required dependencies for this plugin.
+	 *
+	 * Create an instance of the loader which will be used to register the hooks
+	 * with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function load_dependencies()
+	{
+
+		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-criteria.php';
+
+		$this->criteria_controller = new Chouquette_WP_Plugin_Rest_Criteria();
 
 	}
 
@@ -65,6 +94,16 @@ class Chouquette_WP_Plugin_Rest
 				),
 			),
 		));
+
+	}
+
+	/**
+	 * Create new instance of criteria controller
+	 */
+	public function criteria_controller()
+	{
+
+		return $this->criteria_controller->register_routes();
 
 	}
 

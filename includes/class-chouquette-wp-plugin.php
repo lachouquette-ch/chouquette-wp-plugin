@@ -70,12 +70,6 @@ class Chouquette_WP_Plugin
 	/**
 	 * Load the required dependencies for this plugin.
 	 *
-	 * Include the following files that make up the plugin:
-	 *
-	 * - Chouquette_WP_Plugin_Loader. Orchestrates the hooks of the plugin.
-	 * - Chouquette_WP_Plugin_Config. Defines all hooks to config other plugins.
-	 * - Chouquette_WP_Plugin_Register. Defines all hooks to register post types and taxonomies.
-	 *
 	 * Create an instance of the loader which will be used to register the hooks
 	 * with WordPress.
 	 *
@@ -134,6 +128,8 @@ class Chouquette_WP_Plugin
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'category_logos');
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_info');
+
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'criteria_controller');
 
 	}
 
