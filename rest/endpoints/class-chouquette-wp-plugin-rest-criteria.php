@@ -167,9 +167,9 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		}
 
 		// add overall criteria except for services
-		if (!empty($top_category) && $top_category->slug != Chouquette_WP_Plugin_Lib_Category::CQ_CATEGORY_SERVICES) {
-			$other_field = chouquette_acf_get_field_object(Chouquette_WP_Plugin_Lib_Category::CQ_CATEGORY_SERVICES)[0];
-			$criteria_list[Chouquette_WP_Plugin_Lib_Category::CQ_CATEGORY_SERVICES] = $other_field;
+		if (!empty($top_category) && $top_category->slug != Chouquette_WP_Plugin_Lib_Category::SERVICES) {
+			$other_field = chouquette_acf_get_field_object(Chouquette_WP_Plugin_Lib_Category::SERVICES)[0];
+			$criteria_list[Chouquette_WP_Plugin_Lib_Category::SERVICES] = $other_field;
 		}
 
 		$data = array();

@@ -11,11 +11,11 @@
 class Chouquette_WP_Plugin_Lib_Category
 {
 
-	const CQ_CATEGORY_BAR_RETOS = 'bar-et-restaurant';
-	const CQ_CATEGORY_LOISIRS = 'loisirs';
-	const CQ_CATEGORY_CULTURE = 'culture-future';
-	const CQ_CATEGORY_SHOPPING = 'shopping';
-	const CQ_CATEGORY_SERVICES = 'services';
+	const BAR_RETOS = 'bar-et-restaurant';
+	const LOISIRS = 'loisirs';
+	const CULTURE = 'culture-future';
+	const SHOPPING = 'shopping';
+	const SERVICES = 'services';
 
 	const YOAT_PRIMARY_CATEGORY_META_KEY = '_yoast_wpseo_primary_category';
 
