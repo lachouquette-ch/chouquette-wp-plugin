@@ -211,14 +211,14 @@ class Chouquette_WP_Plugin_Rest
 				$fields_social_networks = ['sn_twitter', 'sn_facebook', 'sn_instagram', 'sn_printerest', 'sn_linkedin'];
 				$fields_openings = ['opening_sunday', 'opening_monday', 'opening_tuesday', 'opening_wednesday', 'opening_thursday', 'opening_friday', 'opening_saturday'];
 
-				$data = Chouquette_WP_Plugin_Lib_ACF::getValues($fields_basic, $fiche_id);
+				$data = Chouquette_WP_Plugin_Lib_ACF::get_values($fields_basic, $fiche_id);
 
 				$data['chouquettise'] = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
 
 				if (Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id)) {
-					$data = array_merge($data, Chouquette_WP_Plugin_Lib_ACF::getValues($fields_social_networks, $fiche_id));
+					$data = array_merge($data, Chouquette_WP_Plugin_Lib_ACF::get_values($fields_social_networks, $fiche_id));
 					// group openings in same attribute and use array index instead of field (starting from 0 : sunday as day week)
-					$data['openings'] = array_values(Chouquette_WP_Plugin_Lib_ACF::getValues($fields_openings, $fiche_id));
+					$data['openings'] = array_values(Chouquette_WP_Plugin_Lib_ACF::get_values($fields_openings, $fiche_id));
 				}
 
 				return $data;

@@ -41,6 +41,12 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			)
 		));
 		register_rest_route($namespace, '/' . $base . '/category' . '/(?P<id>[\d]+)', array(
+			'args' => array(
+				'id' => array(
+					'description' => __('Unique identifier for the object.'),
+					'type' => 'integer',
+				),
+			),
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item_for_category'),
@@ -100,11 +106,18 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	 */
 	public function get_item_for_fiche($request)
 	{
+		// get fiche categories
+		return get_field('shopping', $request['id']);
+
+		// get all possible criterias
+
+		// get selected criterias values for post
+
 		return new WP_Error(
 			'invalid-method',
 			/* translators: %s: Method name. */
-			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
-			array( 'status' => 405 )
+			sprintf(__("Method '%s' not implemented. Must be overridden in subclass."), __METHOD__),
+			array('status' => 405)
 		);
 	}
 
@@ -116,39 +129,86 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	 */
 	public function get_item_for_category($request)
 	{
-		return new WP_Error(
-			'invalid-method',
-			/* translators: %s: Method name. */
-			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
-			array( 'status' => 405 )
-		);
+		$category = get_category($request['id']);
+
+		if (empty($category)) {
+			return new WP_Error(
+				'chouquette_critieria_category_invalid_id',
+				__('Invalid category ID.'),
+				array('status' => 404)
+			);
+		}
+
+		// get upper categories
+		$category_ids = array_merge(array($category->term_id), get_ancestors($category->term_id));
+		$top_category = get_category(end($categories));
+
+		// get field objects terms
+		$criteria_list = array();
+		foreach ($category_ids as $category_id) {
+			$acf_fields = Chouquette_WP_Plugin_Lib_ACF::get_field_object(get_category($category_id)->slug);
+			// might not have any acf field
+			if (empty($acf_fields)) {
+				continue;
+			}
+			$the_field = $acf_fields[0]; // get first
+			switch ($the_field['type']) {
+				case Chouquette_WP_Plugin_Lib_ACF::ACF_FIELD_GROUP_TYPE:
+					foreach ($the_field['sub_fields'] as $sub_field) {
+						if ($sub_field['type'] == Chouquette_WP_Plugin_Lib_ACF::ACF_FIELD_TAXONOMY_TYPE) {
+							$criteria_list[$sub_field['taxonomy']] = $sub_field;
+						}
+					}
+					break;
+				case Chouquette_WP_Plugin_Lib_ACF::ACF_FIELD_TAXONOMY_TYPE:
+					$criteria_list[$the_field['taxonomy']] = $the_field;
+					break;
+			}
+		}
+
+		// add overall criteria except for services
+		if (!empty($top_category) && $top_category->slug != Chouquette_WP_Plugin_Lib_Category::CQ_CATEGORY_SERVICES) {
+			$other_field = chouquette_acf_get_field_object(Chouquette_WP_Plugin_Lib_Category::CQ_CATEGORY_SERVICES)[0];
+			$criteria_list[Chouquette_WP_Plugin_Lib_Category::CQ_CATEGORY_SERVICES] = $other_field;
+		}
+
+		$data = array();
+
+		foreach ($criteria_list as $criteria) {
+			$criteria['values'] = get_terms($criteria['taxonomy']);
+
+			$itemdata = $this->prepare_item_for_response($criteria, $request);
+			// TODO add links to leverage this call
+			$data[] = $this->prepare_response_for_collection($itemdata);
+		}
+
+		return $data;
 	}
 
-	/**
-	 * Get the query params for collections
-	 *
-	 * @return array
-	 */
-	public function get_collection_params()
+	public function prepare_item_for_response($criteria, $request)
 	{
-		return array(
-			'page' => array(
-				'description' => 'Current page of the collection.',
-				'type' => 'integer',
-				'default' => 1,
-				'sanitize_callback' => 'absint',
-			),
-			'per_page' => array(
-				'description' => 'Maximum number of items to be returned in result set.',
-				'type' => 'integer',
-				'default' => 10,
-				'sanitize_callback' => 'absint',
-			),
-			'search' => array(
-				'description' => 'Limit results to those matching a string.',
-				'type' => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
-			),
-		);
+		$GLOBALS['criteria'] = $criteria;
+
+		// Base fields for every post.
+		$data = array();
+
+		$data['id'] = $criteria['ID'];
+		$data['taxonomy'] = $criteria['name'];
+		$data['name'] = wp_specialchars_decode($criteria['label']);
+
+		$data['values'] = array_map(function ($term) {
+			$data_term = array();
+
+			$data_term['id'] = $term->term_id;
+			$data_term['slug'] = $term->slug;
+			$data_term['name'] = wp_specialchars_decode($term->name);
+			$data_term['description'] = wp_specialchars_decode($term->description);
+
+			return $data_term;
+		}, $criteria['values']);
+
+		// Wrap the data in a response object.
+		return rest_ensure_response($data);
 	}
+
 }

@@ -11,6 +11,9 @@
 class Chouquette_WP_Plugin_Lib_ACF
 {
 
+	const ACF_FIELD_GROUP_TYPE = 'group';
+	const ACF_FIELD_TAXONOMY_TYPE = 'taxonomy';
+
 	/**
 	 * Get values for each acf fields. Also convert fields to proper numeric values
 	 *
@@ -18,7 +21,7 @@ class Chouquette_WP_Plugin_Lib_ACF
 	 * @param $post_id the post_id (or other object id)
 	 * @return array field name as key and field value as value
 	 */
-	public static function getValues(array $fields, $post_id)
+	public static function get_values(array $fields, $post_id)
 	{
 		$result = array();
 
@@ -39,6 +42,28 @@ class Chouquette_WP_Plugin_Lib_ACF
 		});
 
 		return $result;
+	}
+
+	/**
+	 * Get ACF field object by field name without using post id.
+	 * Works also with sub-groups
+	 *
+	 * @param string $name the field name (can be category name, ...)
+	 * @return the field object (using get_field_object method)
+	 */
+	public static function get_field_object(string $name)
+	{
+		global $wpdb;
+		$field_keys = $wpdb->get_col($wpdb->prepare("
+            SELECT  p.post_name
+            FROM    $wpdb->posts p
+            WHERE   p.post_type = 'acf-field'
+            AND     p.post_excerpt = %s;
+        ", $name));
+
+		return array_map(function ($field_key) {
+			return get_field_object($field_key);
+		}, $field_keys);
 	}
 
 }
