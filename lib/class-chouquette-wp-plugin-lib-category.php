@@ -17,7 +17,7 @@ class Chouquette_WP_Plugin_Lib_Category
 	const CQ_CATEGORY_SHOPPING = 'shopping';
 	const CQ_CATEGORY_SERVICES = 'services';
 
-	public static $yoast_primary_category_meta = '_yoast_wpseo_primary_category';
+	const YOAT_PRIMARY_CATEGORY_META_KEY = '_yoast_wpseo_primary_category';
 
 	/**
 	 * Gets all categories for given post or related fiches. First is primary (if exists).
@@ -46,7 +46,7 @@ class Chouquette_WP_Plugin_Lib_Category
 
 		// get principal category if any
 		foreach ($taxonomy_ids as $taxonomy_id) {
-			$principal_category_id = get_post_meta($taxonomy_id, self::$yoast_primary_category_meta, true);
+			$principal_category_id = get_post_meta($taxonomy_id, self::YOAT_PRIMARY_CATEGORY_META_KEY, true);
 			if (!$principal_category_id) continue;
 
 			// reorder list (array)
