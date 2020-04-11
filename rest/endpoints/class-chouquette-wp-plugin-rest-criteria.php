@@ -148,8 +148,13 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 
 		// get field objects terms
 		foreach ($criteria_list as &$criteria) {
-			$criteria['values'] = get_the_terms($request['id'], $criteria['taxonomy']);
+			$criteria_terms = get_the_terms($request['id'], $criteria['taxonomy']);
 
+			// do not add criteria with no term selected
+			if (empty($criteria_terms))
+				continue;
+
+			$criteria['values'] = $criteria_terms;
 			$itemdata = $this->prepare_item_for_response($criteria, $request);
 			// TODO add links to leverage this call
 			$data[] = $this->prepare_response_for_collection($itemdata);
