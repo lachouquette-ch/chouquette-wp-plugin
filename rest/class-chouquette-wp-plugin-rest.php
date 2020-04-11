@@ -117,7 +117,7 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_field('post', 'top_categories', array(
 			'get_callback' => function ($post_arr) {
-				$categories = Chouquette_WP_Plugin_Lib_Category::get_all_by_post($post_arr['id']);
+				$categories = Chouquette_WP_Plugin_Lib_Category::get_by_post($post_arr['id']);
 
 				return array_map(function ($category) {
 					return $category->term_id;

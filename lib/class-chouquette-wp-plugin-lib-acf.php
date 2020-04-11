@@ -66,4 +66,24 @@ class Chouquette_WP_Plugin_Lib_ACF
 		}, $field_keys);
 	}
 
+	/**
+	 * Get all taxonomy fields for a given field name
+	 *
+	 * @param $field the field name
+	 * @return array all taxonomy fields
+	 */
+	public static function get_taxonomy_fields($field)
+	{
+		switch ($field['type']) {
+			case self::ACF_FIELD_TAXONOMY_TYPE:
+				return array($field);
+			case self::ACF_FIELD_GROUP_TYPE:
+				return array_filter($field['sub_fields'], function ($sub_field) {
+					return $sub_field['type'] === self::ACF_FIELD_TAXONOMY_TYPE;
+				});
+			default:
+				return [];
+		}
+	}
+
 }
