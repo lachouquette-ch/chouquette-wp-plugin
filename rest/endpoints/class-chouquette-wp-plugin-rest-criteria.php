@@ -70,14 +70,12 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	 */
 	public function get_items($request)
 	{
-		$items = array(); //do a query, call another class, etc
-		$data = array();
-		foreach ($items as $item) {
-			$itemdata = $this->prepare_item_for_response($item, $request);
-			$data[] = $this->prepare_response_for_collection($itemdata);
-		}
-
-		return new WP_REST_Response($data, 200);
+		return new WP_Error(
+			'invalid-method',
+			/* translators: %s: Method name. */
+			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
+			array( 'status' => 405 )
+		);
 	}
 
 	/**
@@ -88,17 +86,12 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	 */
 	public function get_item($request)
 	{
-		//get parameters from request
-		$params = $request->get_params();
-		$item = array();//do a query, call another class, etc
-		$data = $this->prepare_item_for_response($item, $request);
-
-		//return a response or error based on some conditional
-		if (1 == 1) {
-			return new WP_REST_Response($data, 200);
-		} else {
-			return new WP_Error('code', __('message', 'text-domain'));
-		}
+		return new WP_Error(
+			'invalid-method',
+			/* translators: %s: Method name. */
+			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
+			array( 'status' => 405 )
+		);
 	}
 
 	private function compute_criteria_list(array $categories)
