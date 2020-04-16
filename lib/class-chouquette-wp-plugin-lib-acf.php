@@ -14,6 +14,8 @@ class Chouquette_WP_Plugin_Lib_ACF
 	const ACF_FIELD_GROUP_TYPE = 'group';
 	const ACF_FIELD_TAXONOMY_TYPE = 'taxonomy';
 
+	const FICHE_SELECTOR = 'link_fiche';
+
 	/**
 	 * Get values for each acf fields. Also convert fields to proper numeric values
 	 *

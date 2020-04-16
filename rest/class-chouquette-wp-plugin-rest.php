@@ -232,6 +232,50 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
+	/**
+	 * Add info fields to fiches (though logos attribute).
+	 *
+	 * @since    1.0.0
+	 */
+	public function fiche_latest_post()
+	{
+
+		register_rest_field('fiche', 'latest_post', array(
+			'get_callback' => function ($fiche_arr) {
+				$fiche_id = $fiche_arr['id'];
+
+				$posts = get_posts(array(
+					'meta_query' => array(
+						array(
+							'key' => Chouquette_WP_Plugin_Lib_ACF::FICHE_SELECTOR,
+							'value' => '"' . $fiche_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+							'compare' => 'LIKE'
+						)
+					)
+				));
+
+				if (empty($posts))
+					return null;
+
+				$lastest_post = array_shift($posts);
+
+				$data = array();
+				$data['id'] = $lastest_post->ID;
+				$data['slug'] = $lastest_post->post_name;
+				$data['title'] = $lastest_post->post_title;
+				$data['date'] = $lastest_post->post_date;
+				$data['modified'] = $lastest_post->post_modified;
+
+				return $data;
+			},
+			'schema' => array(
+				'description' => __('Latest post'),
+				'type' => 'object'
+			),
+		));
+
+	}
+
 	public function fiche_criteria_link($results)
 	{
 

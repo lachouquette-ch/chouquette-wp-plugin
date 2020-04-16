@@ -131,6 +131,8 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_info');
 
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_latest_post');
+
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'criteria_controller');
 
 	}
