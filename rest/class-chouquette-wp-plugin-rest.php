@@ -218,7 +218,8 @@ class Chouquette_WP_Plugin_Rest
 				if (Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id)) {
 					$data = array_merge($data, Chouquette_WP_Plugin_Lib_ACF::get_values($fields_social_networks, $fiche_id));
 					// group openings in same attribute and use array index instead of field (starting from 0 : sunday as day week)
-					$data['openings'] = array_values(Chouquette_WP_Plugin_Lib_ACF::get_values($fields_openings, $fiche_id));
+					$openings = array_values(Chouquette_WP_Plugin_Lib_ACF::get_values($fields_openings, $fiche_id));
+					$data['openings'] = empty($openings) ? null : $openings;
 				}
 
 				return $data;
