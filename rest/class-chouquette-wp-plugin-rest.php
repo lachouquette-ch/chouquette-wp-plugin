@@ -232,4 +232,14 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
+	public function fiche_criteria_link($results)
+	{
+
+		$fiche_id = $results->data['id'];
+		$results->add_link('criteria', rest_url('/chouquette/v1/criteria/fiche/' . $fiche_id), array('embeddable' => true));
+
+		return $results;
+
+	}
+
 }
