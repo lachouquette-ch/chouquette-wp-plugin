@@ -1,6 +1,26 @@
 <?php
 
 /**
+ * PHPMailer configuration
+ */
+if (!function_exists('chouquette_wp_plugin_smtp_config')) :
+	function chouquette_wp_plugin_smtp_config($phpmailer)
+	{
+		$phpmailer->isSMTP();
+		$phpmailer->Host = SMTP_HOST;
+		$phpmailer->SMTPAuth = SMTP_AUTH;
+		$phpmailer->Port = SMTP_PORT;
+		$phpmailer->SMTPSecure = SMTP_SECURE;
+		$phpmailer->Username = SMTP_USERNAME;
+		$phpmailer->Password = SMTP_PASSWORD;
+		$phpmailer->From = SMTP_FROM;
+		$phpmailer->FromName = SMTP_FROMNAME;
+	}
+
+	add_action('phpmailer_init', 'chouquette_wp_plugin_smtp_config');
+endif;
+
+/**
  * Helpers for emails.
  *
  * @since        1.0.0
