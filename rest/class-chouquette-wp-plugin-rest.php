@@ -232,6 +232,9 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
+	/*
+	 * Send a report to the site owner
+	 */
 	public function fiche_report()
 	{
 		function send_report($request)
@@ -260,15 +263,6 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 
-			$fiche_email = get_field('mail', $request->get_param('id'));
-			if (empty($fiche_email)) {
-				return new WP_Error(
-					'rest_fiche_report_mail',
-					__('Fiche does not have any contact mail.'),
-					array('status' => 400)
-				);
-			}
-
 			$fiche_title = get_the_title($request->get_param('id'));
 
 			$post_type_object = get_post_type_object( 'fiche' );
@@ -280,11 +274,11 @@ class Chouquette_WP_Plugin_Rest
 				'Commentaire sur la fiche ' . $fiche_title,
 				$request->get_param('message') . "<br/><a href='${fiche_edit_link}' target='_blank'>Editer la fiche</a>");
 			if ($result) {
-				return new WP_REST_Response(__('Ton message à bien été envoyé à ' . $fiche_title));
+				return new WP_REST_Response(json_encode(__('Ton message à bien été envoyé à ' . $fiche_title)));
 			} else {
 				return new WP_Error(
 					'rest_fiche_report_send',
-					__('Ton email n\'a pas pu être envoyé. Merci de réessayé plus tard ou de nous contact si l\'erreur persiste. On ets désolé, snif !'),
+					json_encode(__('Ton email n\'a pas pu être envoyé. Merci de réessayé plus tard ou de nous contact si l\'erreur persiste. On ets désolé, snif !')),
 					array('status' => 500)
 				);
 			}
@@ -293,6 +287,74 @@ class Chouquette_WP_Plugin_Rest
 		register_rest_route('wp/v2', '/fiches/(?P<id>\d+)/report', array(
 			'methods' => 'POST',
 			'callback' => 'send_report'
+		));
+	}
+
+	/*
+	 * Contact fiche owner
+	 */
+	public function fiche_contact()
+	{
+		function send_contact($request)
+		{
+			if (!get_post_status($request->get_param('id'))) {
+				return new WP_Error(
+					'rest_fiche_contact_id',
+					__('Fiche does not exist.'),
+					array('status' => 404)
+				);
+			}
+
+			if (!$request->has_param('recaptcha') || !$request->has_param('name') || !$request->has_param('email') || !$request->has_param('message')) {
+				return new WP_Error(
+					'rest_fiche_contact_params',
+					__("Should contain 'recaptcha', 'name', 'email' and 'message'."),
+					array('status' => 400)
+				);
+			}
+
+			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+				return new WP_Error(
+					'rest_fiche_recaptcha_invalid',
+					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
+					array('status' => 412)
+				);
+			}
+
+			$fiche_email = get_field('mail', $request->get_param('id'));
+			if (empty($fiche_email)) {
+				return new WP_Error(
+					'rest_fiche_contact_mail',
+					__('Fiche does not have any contact mail.'),
+					array('status' => 400)
+				);
+			}
+
+			$fiche_title = get_the_title($request->get_param('id'));
+
+			$post_type_object = get_post_type_object( 'fiche' );
+			$fiche_edit_link = admin_url( sprintf( $post_type_object->_edit_link . '&action=edit', $request->get_param('id') ) );
+
+			$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
+				$request->get_param('name'),
+				$request->get_param('email'),
+				$fiche_email,
+				"Message de {$request->get_param('name')} via lachouquette.ch",
+				$request->get_param('message'));
+			if ($result) {
+				return new WP_REST_Response(__('Email envoyé à ') . $fiche_email);
+			} else {
+				return new WP_Error(
+					'rest_fiche_contact_send',
+					__('Ton email n\'a pas pu être envoyé. Merci de réessayé plus tard ou de nous contact si l\'erreur persiste. On est désolé, snif !'),
+					array('status' => 500)
+				);
+			}
+		}
+
+		register_rest_route('wp/v2', '/fiches/(?P<id>\d+)/contact', array(
+			'methods' => 'POST',
+			'callback' => 'send_contact'
 		));
 	}
 

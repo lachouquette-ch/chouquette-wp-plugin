@@ -135,6 +135,8 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_report');
 
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_contact');
+
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'criteria_controller');
 
 	}
