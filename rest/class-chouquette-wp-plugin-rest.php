@@ -244,11 +244,19 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 
-			if (!$request->has_param('name') || !$request->has_param('email') || !$request->has_param('message')) {
+			if (!$request->has_param('recaptcha') || !$request->has_param('name') || !$request->has_param('email') || !$request->has_param('message')) {
 				return new WP_Error(
 					'rest_fiche_report_params',
-					__('Should contain name, email and message params.'),
+					__("Should contain 'recaptcha', 'name', 'email' and 'message'."),
 					array('status' => 400)
+				);
+			}
+
+			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+				return new WP_Error(
+					'rest_fiche_recaptcha_invalid',
+					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
+					array('status' => 412)
 				);
 			}
 
