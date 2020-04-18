@@ -252,7 +252,7 @@ class Chouquette_WP_Plugin_Rest
 				$data['slug'] = $category->slug;
 				$data['name'] = $category->name;
 				$data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
-				$data['icon_black'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category,'black');
+				$data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category,'black');
 
 				return $data;
 			},
