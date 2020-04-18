@@ -89,4 +89,23 @@ class Chouquette_WP_Plugin_Lib_Category
 		return $categories;
 	}
 
+	/**
+	 * Return the taxonomy logo (if any)
+	 *
+	 * @param object $category the category
+	 * @param boolean $is_chouquettise if the post is chouquettise
+	 *
+	 * @return the logo URL
+	 */
+	public static function get_marker_icon(object $category, bool $is_chouquettise)
+	{
+		if ($is_chouquettise) {
+			$icon_id = get_field(CQ_CATEGORY_LOGO_MARKER_YELLOW, chouquette_acf_generate_post_id($category));
+		} else {
+			$icon_id = get_field(CQ_CATEGORY_LOGO_MARKER_WHITE, chouquette_acf_generate_post_id($category));
+		}
+		$image_src = wp_get_attachment_image_src($icon_id, 'full')[0];
+		return $image_src;
+	}
+
 }

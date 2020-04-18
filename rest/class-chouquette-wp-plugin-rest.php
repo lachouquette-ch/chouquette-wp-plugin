@@ -232,6 +232,31 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
+	/**
+	 * Add marker icon to fiches.
+	 *
+	 * @since    1.0.0
+	 */
+	public function fiche_marker_icon()
+	{
+
+		register_rest_field('fiche', 'marker_icon', array(
+			'get_callback' => function ($fiche_arr) {
+				$fiche_id = $fiche_arr['id'];
+
+				$category = Chouquette_WP_Plugin_Lib_Category::get_by_post($fiche_id)[0];
+				$is_chouquettise = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
+
+				return Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
+			},
+			'schema' => array(
+				'description' => __('Fiche marker icon URL'),
+				'type' => 'URL'
+			),
+		));
+
+	}
+
 	/*
 	 * Send a report to the site owner
 	 */
