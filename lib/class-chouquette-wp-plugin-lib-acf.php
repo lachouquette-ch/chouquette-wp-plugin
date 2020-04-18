@@ -88,4 +88,20 @@ class Chouquette_WP_Plugin_Lib_ACF
 		}
 	}
 
+	/**
+	 * Generate the post_id as described in https://www.advancedcustomfields.com/resources/get_field/
+	 */
+	public static function generate_post_id($item)
+	{
+		if ($item instanceof WP_Term) {
+			return $item->taxonomy . '_' . $item->term_id;
+		} elseif ($item instanceof WP_Post) {
+			return $item->object . '_' . $item->object_id;
+		} elseif ($item instanceof WP_User) {
+			return 'user_' . $item->ID;
+		} else {
+			trigger_error(sprintf("%s neither have attribute 'object' or 'object_id'", print_r($item, true)), E_USER_ERROR);
+		}
+	}
+
 }

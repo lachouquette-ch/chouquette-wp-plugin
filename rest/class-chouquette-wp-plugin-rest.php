@@ -233,25 +233,32 @@ class Chouquette_WP_Plugin_Rest
 	}
 
 	/**
-	 * Add marker icon to fiches.
+	 * Add main category info fiches.
 	 *
 	 * @since    1.0.0
 	 */
-	public function fiche_marker_icon()
+	public function fiche_main_category()
 	{
 
-		register_rest_field('fiche', 'marker_icon', array(
+		register_rest_field('fiche', 'main_category', array(
 			'get_callback' => function ($fiche_arr) {
 				$fiche_id = $fiche_arr['id'];
 
 				$category = Chouquette_WP_Plugin_Lib_Category::get_by_post($fiche_id)[0];
 				$is_chouquettise = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
 
-				return Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
+				$data = array();
+				$data['id'] = $category->term_id;
+				$data['slug'] = $category->slug;
+				$data['name'] = $category->name;
+				$data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
+				$data['icon_black'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category,'black');
+
+				return $data;
 			},
 			'schema' => array(
-				'description' => __('Fiche marker icon URL'),
-				'type' => 'URL'
+				'description' => __('Fiche main category info'),
+				'type' => 'object'
 			),
 		));
 

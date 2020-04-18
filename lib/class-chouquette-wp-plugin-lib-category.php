@@ -17,6 +17,12 @@ class Chouquette_WP_Plugin_Lib_Category
 	const SHOPPING = 'shopping';
 	const SERVICES = 'services';
 
+	const CQ_CATEGORY_LOGO_YELLOW = 'logo_yellow';
+	const CQ_CATEGORY_LOGO_WHITE = 'logo_white';
+	const CQ_CATEGORY_LOGO_BLACK = 'logo_black';
+	const CQ_CATEGORY_LOGO_MARKER_YELLOW = 'marker_yellow';
+	const CQ_CATEGORY_LOGO_MARKER_WHITE = 'marker_white';
+
 	const YOAT_PRIMARY_CATEGORY_META_KEY = '_yoast_wpseo_primary_category';
 
 	/**
@@ -90,7 +96,7 @@ class Chouquette_WP_Plugin_Lib_Category
 	}
 
 	/**
-	 * Return the taxonomy logo (if any)
+	 * Get the category marker logo
 	 *
 	 * @param object $category the category
 	 * @param boolean $is_chouquettise if the post is chouquettise
@@ -100,12 +106,38 @@ class Chouquette_WP_Plugin_Lib_Category
 	public static function get_marker_icon(object $category, bool $is_chouquettise)
 	{
 		if ($is_chouquettise) {
-			$icon_id = get_field(CQ_CATEGORY_LOGO_MARKER_YELLOW, chouquette_acf_generate_post_id($category));
+			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_YELLOW, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
 		} else {
-			$icon_id = get_field(CQ_CATEGORY_LOGO_MARKER_WHITE, chouquette_acf_generate_post_id($category));
+			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_WHITE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
 		}
 		$image_src = wp_get_attachment_image_src($icon_id, 'full')[0];
 		return $image_src;
 	}
 
+	/**
+	 * Get the category logo
+	 *
+	 * @param object $category the category. Should have a 'logo' attribute (array) with the id of the image
+	 * @param string $color the color. Only 'white', 'black' or 'yellow'
+	 * @param string $size the WP size. Default is thumbnail
+	 *
+	 * @throws Exception if no color is defined
+	 */
+	public static function get_logo(object $category, string $color = 'yellow', string $size = 'thumbnail')
+	{
+		switch ($color) {
+			case 'white':
+				$logo_id = get_field(self::CQ_CATEGORY_LOGO_WHITE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				break;
+			case 'black':
+				$logo_id = get_field(self::CQ_CATEGORY_LOGO_BLACK, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				break;
+			case 'yellow':
+				$logo_id = get_field(self::CQ_CATEGORY_LOGO_YELLOW, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				break;
+			default:
+				throw new Exception("$color is undefined");
+		}
+		return wp_get_attachment_image_src($logo_id, $size)[0];
+	}
 }
