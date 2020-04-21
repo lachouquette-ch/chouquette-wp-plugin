@@ -262,7 +262,7 @@ class Chouquette_WP_Plugin_Rest
 				$data['slug'] = $category->slug;
 				$data['name'] = $category->name;
 				$data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
-				$data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category,'black');
+				$data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category, 'black');
 
 				return $data;
 			},
@@ -307,8 +307,8 @@ class Chouquette_WP_Plugin_Rest
 
 			$fiche_title = get_the_title($request->get_param('id'));
 
-			$post_type_object = get_post_type_object( 'fiche' );
-			$fiche_edit_link = admin_url( sprintf( $post_type_object->_edit_link . '&action=edit', $request->get_param('id') ) );
+			$post_type_object = get_post_type_object('fiche');
+			$fiche_edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $request->get_param('id')));
 			$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
 				$request->get_param('name'),
 				$request->get_param('email'),
@@ -374,8 +374,8 @@ class Chouquette_WP_Plugin_Rest
 
 			$fiche_title = get_the_title($request->get_param('id'));
 
-			$post_type_object = get_post_type_object( 'fiche' );
-			$fiche_edit_link = admin_url( sprintf( $post_type_object->_edit_link . '&action=edit', $request->get_param('id') ) );
+			$post_type_object = get_post_type_object('fiche');
+			$fiche_edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $request->get_param('id')));
 
 			$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
 				$request->get_param('name'),
@@ -397,6 +397,56 @@ class Chouquette_WP_Plugin_Rest
 		register_rest_route('wp/v2', '/fiches/(?P<id>\d+)/contact', array(
 			'methods' => 'POST',
 			'callback' => 'send_contact'
+		));
+	}
+
+	/*
+	 * Contact fiche owner
+	 */
+	public function user_members()
+	{
+		/**
+		 * Prepares a single user output for response.
+		 *
+		 * @see https://github.com/WordPress/WordPress/blob/master/wp-includes/rest-api/endpoints/class-wp-rest-users-controller.php
+		 */
+		function prepare_item_for_response($user, $request)
+		{
+			$data = array();
+
+			$data['id'] = $user->ID;
+			$data['name'] = $user->display_name;
+			$data['url'] = $user->user_url;
+			$data['description'] = $user->description;
+			$data['link'] = get_author_posts_url($user->ID, $user->user_nicename);
+			$data['slug'] = $user->user_nicename;
+			$data['roles'] = array_values($user->roles);
+			$data['registered_date'] = gmdate('c', strtotime($user->user_registered));
+			$data['avatar_urls'] = rest_get_avatar_urls($user);
+
+			return $data;
+		}
+
+
+		function get_team_members($request)
+		{
+			$args = array(
+				'role__in' => array('administrator', 'editor', 'author'),
+				'orderby' => 'registered'
+			);
+			$users = get_users($args);
+
+			$data = array();
+			foreach ($users as $user) {
+				$data[] = prepare_item_for_response($user, $request);
+			}
+
+			return $data;
+		}
+
+		register_rest_route('wp/v2', '/users/team', array(
+			'methods' => 'GET',
+			'callback' => 'get_team_members'
 		));
 	}
 
