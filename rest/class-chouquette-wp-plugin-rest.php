@@ -71,8 +71,10 @@ class Chouquette_WP_Plugin_Rest
 	{
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-criteria.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-contact.php';
 
 		$this->criteria_controller = new Chouquette_WP_Plugin_Rest_Criteria();
+		$this->contact_controller = new Chouquette_WP_Plugin_Rest_Contact();
 
 	}
 
@@ -98,13 +100,21 @@ class Chouquette_WP_Plugin_Rest
 	}
 
 	/**
-	 * Create new instance of criteria controller
+	 * Register routes for criteria controller
 	 */
-	public function criteria_controller()
+	public function register_criteria_routes()
 	{
 
 		return $this->criteria_controller->register_routes();
 
+	}
+
+	/**
+	 * Register routes for contact controller
+	 */
+	public function register_contact_routes()
+	{
+		return $this->contact_controller->register_routes();
 	}
 
 	/**
