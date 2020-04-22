@@ -14,6 +14,8 @@ class Chouquette_WP_Plugin_Lib_ACF
 	const ACF_FIELD_GROUP_TYPE = 'group';
 	const ACF_FIELD_TAXONOMY_TYPE = 'taxonomy';
 
+	const CQ_USER_ROLE = 'role';
+
 	const FICHE_SELECTOR = 'link_fiche';
 
 	/**

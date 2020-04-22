@@ -423,6 +423,7 @@ class Chouquette_WP_Plugin_Rest
 			$data['roles'] = array_values($user->roles);
 			$data['registered_date'] = gmdate('c', strtotime($user->user_registered));
 			$data['avatar_urls'] = rest_get_avatar_urls($user);
+			$data['title'] = get_field(Chouquette_WP_Plugin_Lib_ACF::CQ_USER_ROLE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($user));
 
 			return $data;
 		}
