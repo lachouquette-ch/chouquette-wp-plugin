@@ -85,7 +85,7 @@ class Chouquette_WP_Plugin_Rest
 	{
 
 		// link_fiche
-		register_meta('post', 'link_fiche', array(
+		register_meta('post', Chouquette_WP_Plugin_Lib_ACF::FICHE_SELECTOR, array(
 			'single' => true,
 			'show_in_rest' => array(
 				'schema' => array(
