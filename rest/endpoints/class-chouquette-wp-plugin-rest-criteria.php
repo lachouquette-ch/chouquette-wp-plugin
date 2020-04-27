@@ -128,10 +128,16 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		);
 	}
 
+	/**
+	 * Compute all criteria for given set a categories
+	 *
+	 * @param array $categories all categories
+	 * @return array of key category id and values all criteria for it
+	 */
 	private function compute_criteria_list(array $categories)
 	{
 
-		$acf_fields = array();
+		$result = array();
 		$top_categories = array();
 
 		// get fields for categories
@@ -139,7 +145,15 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			if ($category->parent === 0) {
 				$top_categories[] = $category;
 			}
-			$acf_fields = array_merge($acf_fields, Chouquette_WP_Plugin_Lib_ACF::get_field_object($category->slug));
+			$acf_field = Chouquette_WP_Plugin_Lib_ACF::get_field_object($category->slug);
+			// no acf field for category ? (can be...)
+			if (empty($acf_field)) {
+				continue;
+			}
+
+			$taxonomy_fields = Chouquette_WP_Plugin_Lib_ACF::get_taxonomy_fields($acf_field[0]);
+
+			$result[$category->term_id] = $taxonomy_fields;
 		}
 
 		// get overall fields except for services
@@ -149,19 +163,12 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			}
 		);
 		if (!empty($candidate_categories)) {
-			$acf_fields = array_merge($acf_fields, Chouquette_WP_Plugin_Lib_ACF::get_field_object(self::TAXONOMY_CRITERIA));
+			$taxonomy_fields = Chouquette_WP_Plugin_Lib_ACF::get_field_object(self::TAXONOMY_CRITERIA);
+
+			$result[0] = $taxonomy_fields;
 		}
 
-		// compute all criteria for gathered fields
-
-		$criteria_list = array();
-
-		foreach ($acf_fields as $acf_field) {
-			$criteria = Chouquette_WP_Plugin_Lib_ACF::get_taxonomy_fields($acf_field);
-			$criteria_list = array_merge($criteria_list, $criteria);
-		}
-
-		return $criteria_list;
+		return $result;
 
 	}
 
@@ -195,22 +202,35 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 
 		$categories = Chouquette_WP_Plugin_Lib_Category::get_all_by_post($request['id']);
 
-		$criteria_list = $this->compute_criteria_list($categories);
+		$category_criteria_list = $this->compute_criteria_list($categories);
 
 		$data = array();
 
-		// get field objects terms
-		foreach ($criteria_list as &$criteria) {
-			$criteria_terms = get_the_terms($request['id'], $criteria['taxonomy']);
+		// loop on all categories
+		foreach ($category_criteria_list as $category_id => $criteria_list) {
 
-			// do not add criteria with no term selected
-			if (empty($criteria_terms))
-				continue;
+			$category_terms = array();
 
-			$criteria['values'] = $criteria_terms;
-			$itemdata = $this->prepare_item_for_response($criteria, $request);
-			// TODO add links to leverage this call
-			$data[] = $this->prepare_response_for_collection($itemdata);
+			foreach ($criteria_list as &$criteria) {
+
+				$criteria_terms = get_the_terms($request['id'], $criteria['taxonomy']);
+				// do not add criteria with no term selected
+				if (empty($criteria_terms)) {
+					continue;
+				}
+
+				$criteria['values'] = $criteria_terms;
+
+				$prepared_data = $this->prepare_item_for_response($criteria, $request);
+
+				$category_terms[] = $prepared_data->data;
+
+			}
+
+			if (!empty($category_terms)) {
+				$data[$category_id] = $this->prepare_response_for_collection($category_terms);
+			}
+
 		}
 
 		return $data;
@@ -226,34 +246,12 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	public function get_item_for_category($request)
 	{
 
-		// add ancestors to list of categories
-		$category_ids = array_merge(array($request['id']), get_ancestors($request['id'], 'category'));
-
-		$categories = array_map(function ($category_id) {
-			return get_category($category_id);
-		}, $category_ids);
-
-		if (empty($categories)) {
-			return new WP_Error(
-				'chouquette_critieria_category_invalid_id',
-				__('Invalid category ID.'),
-				array('status' => 404)
-			);
-		}
-
-		$criteria_list = $this->compute_criteria_list($categories);
-
-		$data = array();
-
-		foreach ($criteria_list as &$criteria) {
-			$criteria['values'] = get_terms($criteria['taxonomy']);
-
-			$itemdata = $this->prepare_item_for_response($criteria, $request);
-			// TODO add links to leverage this call
-			$data[] = $this->prepare_response_for_collection($itemdata);
-		}
-
-		return $data;
+		return new WP_Error(
+			'invalid-method',
+			/* translators: %s: Method name. */
+			sprintf(__("Method '%s' not implemented. Must be overridden in subclass."), __METHOD__),
+			array('status' => 405)
+		);
 
 	}
 
