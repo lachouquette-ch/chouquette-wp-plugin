@@ -22,6 +22,13 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			)
 		));
 		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)', array(
+			'args' => array(
+				'id' => array(
+					'description' => __('Unique identifier for the object.'),
+					'type' => 'integer',
+					'required' => true
+				)
+			),
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item'),
@@ -42,6 +49,8 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 					),
 					'include' => array(
 						'type' => 'array',
+						'required' => true,
+						'description' => "List of fiches ids to retrieve",
 						'items' => array(
 							'type' => 'integer',
 						)
@@ -50,6 +59,13 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			)
 		));
 		register_rest_route($namespace, '/' . $base . '/fiche' . '/(?P<id>[\d]+)', array(
+			'args' => array(
+				'id' => array(
+					'description' => __('Unique identifier for the object.'),
+					'type' => 'integer',
+					'required' => true
+				)
+			),
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item_for_fiche'),
@@ -65,6 +81,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 				'id' => array(
 					'description' => __('Unique identifier for the object.'),
 					'type' => 'integer',
+					'required' => true
 				),
 			),
 			array(
