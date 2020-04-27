@@ -32,6 +32,23 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 				),
 			)
 		));
+		register_rest_route($namespace, '/' . $base . '/fiche', array(
+			array(
+				'methods' => WP_REST_Server::READABLE,
+				'callback' => array($this, 'get_item_for_fiches'),
+				'args' => array(
+					'context' => array(
+						'default' => 'view',
+					),
+					'include' => array(
+						'type' => 'array',
+						'items' => array(
+							'type' => 'integer',
+						)
+					),
+				)
+			)
+		));
 		register_rest_route($namespace, '/' . $base . '/fiche' . '/(?P<id>[\d]+)', array(
 			array(
 				'methods' => WP_REST_Server::READABLE,
@@ -73,8 +90,8 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		return new WP_Error(
 			'invalid-method',
 			/* translators: %s: Method name. */
-			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
-			array( 'status' => 405 )
+			sprintf(__("Method '%s' not implemented. Must be overridden in subclass."), __METHOD__),
+			array('status' => 405)
 		);
 	}
 
@@ -89,8 +106,8 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		return new WP_Error(
 			'invalid-method',
 			/* translators: %s: Method name. */
-			sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ),
-			array( 'status' => 405 )
+			sprintf(__("Method '%s' not implemented. Must be overridden in subclass."), __METHOD__),
+			array('status' => 405)
 		);
 	}
 
@@ -128,6 +145,25 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		}
 
 		return $criteria_list;
+
+	}
+
+	/**
+	 * Get one item from the collection
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item_for_fiches($request)
+	{
+
+		$data = array();
+
+		foreach ($request['include'] as $post_id) {
+			$data[$post_id] = $this->get_item_for_fiche(array("id" => $post_id));
+		}
+
+		return $data;
 
 	}
 
