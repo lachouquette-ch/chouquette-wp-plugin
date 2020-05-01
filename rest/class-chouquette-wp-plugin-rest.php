@@ -80,6 +80,8 @@ class Chouquette_WP_Plugin_Rest
 
 	/**
 	 * Register existing meta fields to show in rest
+	 *
+	 * @since 1.0.0
 	 */
 	public function register_meta()
 	{
@@ -101,6 +103,8 @@ class Chouquette_WP_Plugin_Rest
 
 	/**
 	 * Register routes for criteria controller
+	 *
+	 * @since 1.0.0
 	 */
 	public function register_criteria_routes()
 	{
@@ -111,6 +115,8 @@ class Chouquette_WP_Plugin_Rest
 
 	/**
 	 * Register routes for contact controller
+	 *
+	 * @since 1.0.0
 	 */
 	public function register_contact_routes()
 	{
@@ -175,6 +181,8 @@ class Chouquette_WP_Plugin_Rest
 	 * @param $prepared_comment array the prepared comment
 	 * @param $request WP_REST_Request the request
 	 * @return WP_Error if comment is not validated or request is invalid
+	 *
+	 * @since 1.0.0
 	 */
 	public function validate_comment_recaptcha($prepared_comment, WP_REST_Request $request)
 	{
@@ -274,8 +282,10 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
-	/*
+	/**
 	 * Send a report to the site owner
+	 *
+	 * @since 1.0.0
 	 */
 	public function fiche_report()
 	{
@@ -332,8 +342,24 @@ class Chouquette_WP_Plugin_Rest
 		));
 	}
 
-	/*
+	/**
+	 * Basic filter to force fiche to be sorted by Chouquettisation (first Chouquettise by date then the others)
+	 *
+	 * @since 1.0.0
+	 */
+	public function fiche_sort_by_chouquettise_filter($args, $request) {
+		$args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO;
+		$args['meta_type'] = 'DATE';
+		$args['orderby'] = 'meta_value date';
+		$args['order'] = 'DESC DESC';
+
+		return $args;
+	}
+
+	/**
 	 * Contact fiche owner
+	 *
+	 * @since 1.0.0
 	 */
 	public function fiche_contact()
 	{
@@ -400,8 +426,10 @@ class Chouquette_WP_Plugin_Rest
 		));
 	}
 
-	/*
+	/**
 	 * Contact fiche owner
+	 *
+	 * @since 1.0.0
 	 */
 	public function user_members()
 	{
@@ -495,6 +523,11 @@ class Chouquette_WP_Plugin_Rest
 
 	}
 
+	/**
+	 * Add link to fiche criterias
+	 *
+	 * @since 1.0.0
+	 */
 	public function fiche_criteria_link($results)
 	{
 
