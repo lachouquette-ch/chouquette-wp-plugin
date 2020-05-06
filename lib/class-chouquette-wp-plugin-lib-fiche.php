@@ -19,7 +19,7 @@ class Chouquette_WP_Plugin_Lib_Fiche
 	 *
 	 * @param int|WP_Post|null $post Post ID or post object of null to get globa $post
 	 *
-	 * @return array of posts (fiches) sorted (chouquettise last). Empty array if none.
+	 * @return array of posts. Empty array if none.
 	 */
 	public static function get_all_by_post($post)
 	{
@@ -31,14 +31,7 @@ class Chouquette_WP_Plugin_Lib_Fiche
 		} elseif (!is_array($fiches)) {
 			return array($fiches);
 		} else {
-			// sort fiches (chouquettises last)
-			$fiches_chouquettises = array_filter($fiches, function ($fiche) {
-				return self::is_chouquettise($fiche->ID);
-			});
-			$fiches_not_chouquettises = array_filter($fiches, function ($fiche) {
-				return !self::is_chouquettise($fiche->ID);
-			});
-			return array_merge($fiches_not_chouquettises, $fiches_chouquettises);
+			return $fiches;
 		}
 
 	}
