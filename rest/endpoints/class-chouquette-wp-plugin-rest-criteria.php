@@ -132,7 +132,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	 * Compute all criteria for given set a categories
 	 *
 	 * @param array $categories all categories
-	 * @return array of key category id and values all criteria for it
+	 * @return array of array (single value) with key category id and values all criteria for it
 	 */
 	private function compute_criteria_list(array $categories)
 	{
@@ -153,7 +153,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 
 			$taxonomy_fields = Chouquette_WP_Plugin_Lib_ACF::get_taxonomy_fields($acf_field[0]);
 
-			$result[$category->term_id] = $taxonomy_fields;
+			$result[] = array($category->term_id => $taxonomy_fields);
 		}
 
 		// get overall fields except for services
@@ -165,7 +165,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		if (!empty($candidate_categories)) {
 			$taxonomy_fields = Chouquette_WP_Plugin_Lib_ACF::get_field_object(self::TAXONOMY_CRITERIA);
 
-			$result[0] = $taxonomy_fields;
+			$result[] = array(0 => $taxonomy_fields);
 		}
 
 		return $result;
@@ -207,7 +207,10 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		$data = array();
 
 		// loop on all categories
-		foreach ($category_criteria_list as $category_id => $criteria_list) {
+		foreach ($category_criteria_list as $category_criteria) {
+
+			$category_id = key($category_criteria);
+			$criteria_list = $category_criteria[$category_id];
 
 			$category_terms = array();
 
@@ -228,7 +231,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			}
 
 			if (!empty($category_terms)) {
-				$data[$category_id] = $this->prepare_response_for_collection($category_terms);
+				$data[] = array('category_id' => $category_id, 'criteria' => $this->prepare_response_for_collection($category_terms));
 			}
 
 		}
@@ -256,7 +259,10 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		}
 
 		$category_criteria_list = $this->compute_criteria_list($categories);
-		$criteria_list = array_merge(...$category_criteria_list);
+		$criteria_list = array_map(function($category_criteria) {
+			return array_pop($category_criteria);
+		}, $category_criteria_list);
+		$criteria_list = array_merge(...$criteria_list);
 
 		$data = array();
 
