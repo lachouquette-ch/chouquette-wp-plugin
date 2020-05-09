@@ -231,7 +231,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			}
 
 			if (!empty($category_terms)) {
-				$data[] = array('category_id' => $category_id, 'criteria' => $this->prepare_response_for_collection($category_terms));
+				$data[] = $this->prepare_response_for_collection($category_terms);
 			}
 
 		}
