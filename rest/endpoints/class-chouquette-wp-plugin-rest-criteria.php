@@ -246,12 +246,45 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	public function get_item_for_category($request)
 	{
 
-		return new WP_Error(
-			'invalid-method',
-			/* translators: %s: Method name. */
-			sprintf(__("Method '%s' not implemented. Must be overridden in subclass."), __METHOD__),
-			array('status' => 405)
-		);
+		$category = get_category($request['id']);
+
+		// ascend to top category
+		$categories = array($category);
+		while ($category->category_parent) {
+			$category = get_category($category->category_parent);
+			array_unshift($categories, $category);
+		}
+
+		$category_criteria_list = $this->compute_criteria_list($categories);
+		$criteria_list = array_merge(...$category_criteria_list);
+
+		$data = array();
+
+		$criteria_indexes = array();
+		foreach($criteria_list as &$criteria) {
+			if (in_array($criteria['ID'], $criteria_indexes)) {
+				continue;
+			}
+
+			$criteria_terms = get_terms([
+				'taxonomy' => $criteria['taxonomy'],
+				'hide_empty' => false,
+			]);
+			// do not add criteria with no terms
+			if (empty($criteria_terms)) {
+				continue;
+			}
+
+			$criteria['values'] = $criteria_terms;
+
+			$prepared_data = $this->prepare_item_for_response($criteria, $request);
+
+			$data[] = $prepared_data->data;
+			$criteria_indexes[] = $criteria['ID'];
+
+		}
+
+		return $this->prepare_response_for_collection($data);
 
 	}
 
@@ -263,7 +296,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 		$data = array();
 
 		$data['id'] = $criteria['ID'];
-		$data['taxonomy'] = $criteria['name'];
+		$data['taxonomy'] = $criteria['taxonomy'];
 		$data['name'] = wp_specialchars_decode($criteria['label']);
 
 		$data['values'] = array_map(function ($term) {
