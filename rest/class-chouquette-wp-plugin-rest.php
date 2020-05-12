@@ -347,12 +347,40 @@ class Chouquette_WP_Plugin_Rest
 	 *
 	 * @since 1.0.0
 	 */
-	public function fiche_sort_by_chouquettise_filter($args, $request) {
+	public function fiche_sort_by_chouquettise_filter($args, $request)
+	{
 		$args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO;
 		$args['meta_type'] = 'DATE';
 		$args['orderby'] = 'meta_value date';
 		$args['order'] = 'DESC DESC';
 
+		return $args;
+	}
+
+	/**
+	 * Filter fiches using category (with subcategory included) and chouquette taxonomies
+	 *
+	 * @since 1.0.0
+	 */
+	public function fiche_category_criteria_filter($args, $request)
+	{
+		if ($request['category']) {
+			$args['cat'] = 'bar-et-restaurant';
+		}
+
+		$cq_taxonomies = Chouquette_WP_Plugin_Lib_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
+
+		if (!empty($cq_taxonomies)) {
+			$args['tax_query'] = array('relation' => 'AND');
+
+			foreach ($cq_taxonomies as $taxonomy => $terms) {
+				$args['tax_query'][] = array(
+					'taxonomy' => $taxonomy,
+					'operator' => 'AND',
+					'terms' => $terms
+				);
+			}
+		}
 		return $args;
 	}
 

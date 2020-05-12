@@ -125,6 +125,8 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_filter('rest_fiche_query', $plugin_rest, 'fiche_sort_by_chouquettise_filter', 10, 2);
 
+		$this->loader->add_filter('rest_fiche_query', $plugin_rest, 'fiche_category_criteria_filter', 10, 2);
+
 		$this->loader->add_action('rest_prepare_fiche', $plugin_rest, 'fiche_criteria_link', 10, 1);
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'post_top_categories');
