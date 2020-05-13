@@ -365,7 +365,7 @@ class Chouquette_WP_Plugin_Rest
 	public function fiche_category_criteria_filter($args, $request)
 	{
 		if ($request['category']) {
-			$args['category_name '] = $request['category'];
+			$args['category_name'] = $request['category'];
 		}
 
 		$cq_taxonomies = Chouquette_WP_Plugin_Lib_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
@@ -382,6 +382,7 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 		}
+
 		return $args;
 	}
 
