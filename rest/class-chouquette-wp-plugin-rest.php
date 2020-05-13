@@ -365,7 +365,7 @@ class Chouquette_WP_Plugin_Rest
 	public function fiche_category_criteria_filter($args, $request)
 	{
 		if ($request['category']) {
-			$args['cat'] = 'bar-et-restaurant';
+			$args['category_name '] = $request['category'];
 		}
 
 		$cq_taxonomies = Chouquette_WP_Plugin_Lib_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
@@ -376,6 +376,7 @@ class Chouquette_WP_Plugin_Rest
 			foreach ($cq_taxonomies as $taxonomy => $terms) {
 				$args['tax_query'][] = array(
 					'taxonomy' => $taxonomy,
+					'field' => 'slug',
 					'operator' => 'AND',
 					'terms' => $terms
 				);
