@@ -368,11 +368,20 @@ class Chouquette_WP_Plugin_Rest
 			$args['category_name'] = $request['category'];
 		}
 
+		$args['tax_query'] = array('relation' => 'AND');
+
+		if ($request['location']) {
+			$args['tax_query'][] = array(
+				'taxonomy' => 'cq_location',
+				'field' => 'slug',
+				'operator' => 'AND',
+				'terms' => explode(',', $request['location'])
+			);
+		}
+
 		$cq_taxonomies = Chouquette_WP_Plugin_Lib_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
 
 		if (!empty($cq_taxonomies)) {
-			$args['tax_query'] = array('relation' => 'AND');
-
 			foreach ($cq_taxonomies as $taxonomy => $terms) {
 				$args['tax_query'][] = array(
 					'taxonomy' => $taxonomy,
