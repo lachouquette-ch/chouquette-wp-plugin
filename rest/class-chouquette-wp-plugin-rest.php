@@ -519,14 +519,14 @@ class Chouquette_WP_Plugin_Rest
 	}
 
 	/**
-	 * Add info fields to fiches (though logos attribute).
+	 * Add linked posts for fiche with minimum attributes
 	 *
 	 * @since    1.0.0
 	 */
-	public function fiche_latest_post()
+	public function fiche_linked_posts()
 	{
 
-		register_rest_field('fiche', 'latest_post', array(
+		register_rest_field('fiche', 'linked_posts', array(
 			'get_callback' => function ($fiche_arr) {
 				$fiche_id = $fiche_arr['id'];
 
@@ -541,22 +541,30 @@ class Chouquette_WP_Plugin_Rest
 				));
 
 				if (empty($posts))
-					return null;
+					return [];
 
-				$lastest_post = array_shift($posts);
+				$result = array();
 
-				$data = array();
-				$data['id'] = $lastest_post->ID;
-				$data['slug'] = $lastest_post->post_name;
-				$data['title'] = $lastest_post->post_title;
-				$data['date'] = $lastest_post->post_date;
-				$data['modified'] = $lastest_post->post_modified;
+				foreach ($posts as $post) {
+					$data = array();
+					$data['id'] = $post->ID;
+					$data['slug'] = $post->post_name;
+					$data['title'] = $post->post_title;
+					$data['date'] = $post->post_date;
+					$data['modified'] = $post->post_modified;
 
-				return $data;
+					$result[] = $data;
+				}
+
+				return $result;
 			},
+
 			'schema' => array(
-				'description' => __('Latest post'),
-				'type' => 'object'
+				'description' => __('All linked posts'),
+				'type' => 'array',
+				'items' => array(
+					'type' => 'object'
+				)
 			),
 		));
 
