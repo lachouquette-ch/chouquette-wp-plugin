@@ -10,8 +10,8 @@
  * @package Chouquette_WP_Plugin
  *
  * @wordpress-plugin
- * Plugin Name: Chouquette Wordpress Plugin
- * Description: Plugin to connect SPA to a Wordpress instance. The instance must be pre-initialize with proper register fields and taxonomies
+ * Plugin Name: Chouquette Wordpress REST
+ * Description: Plugin to expose Chouquette data using REST. The instance must be pre-initialize with proper register fields and taxonomies
  * Version: 1.0.0
  * Author: Fabrice Douchant <fabrice.douchant@gmail.com>
  * License: La Chouquette all right reserved
