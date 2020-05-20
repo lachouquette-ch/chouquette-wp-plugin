@@ -57,4 +57,31 @@ class Chouquette_WP_Plugin_Config
 
 	}
 
+	/**
+	 * Hack preview post link to website
+	 *
+	 * @since 1.0.0
+	 */
+	public function preview_post_link($preview_link, $post)
+	{
+
+		$nonce = wp_create_nonce('wp_rest');
+
+		return CHOUQUETTE_WP_PLUGIN_WEBSITE_URL . '/preview?type=' . $post->post_type . '&id=' . $post->ID . '&nonce=' . $nonce;
+
+	}
+
+	/**
+	 * Add CORS HTTP Header
+	 *
+	 * @since 1.0.0
+	 */
+	public function add_cors_http_header()
+	{
+
+		header("Access-Control-Allow-Headers: X-WP-Nonce", false);
+
+	}
+
+
 }

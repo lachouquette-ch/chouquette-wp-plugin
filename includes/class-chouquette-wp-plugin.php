@@ -109,6 +109,10 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_filter('acf/fields/google_map/api', $plugin_config, 'acf_fields_google_map_api');
 
+		$this->loader->add_filter('preview_post_link', $plugin_config, 'preview_post_link', 10, 2);
+
+		$this->loader->add_action('rest_pre_serve_request', $plugin_config, 'add_cors_http_header');
+
 	}
 
 	/**
