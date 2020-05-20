@@ -1,14 +1,14 @@
 <?php
 
 /**
- * The configuration functionality of the plugin.
+ * The yoast related configuration of the plugin.
  *
  * @since        1.0.0
  * @package        Chouquette_WP_Plugin
- * @subpackage    Chouquette_WP_Plugin/config
+ * @subpackage    Chouquette_WP_Plugin/yost
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Config
+class Chouquette_WP_Plugin_Yoast
 {
 
 	/**
@@ -45,15 +45,14 @@ class Chouquette_WP_Plugin_Config
 	}
 
 	/**
-	 * Get google map API key.
+	 * Change the sitemap URL
 	 *
 	 * @since    1.0.0
 	 */
-	public function acf_fields_google_map_api($api)
+	function filter_wpseo_sitemap_url($output, $url)
 	{
 
-		$api['key'] = 'AIzaSyCL4mYyxlnp34tnC57WyrU_63BJhuRoeKI';
-		return $api;
+		return str_replace(home_url(), CHOUQUETTE_WP_PLUGIN_WEBSITE_URL, $output);;
 
 	}
 

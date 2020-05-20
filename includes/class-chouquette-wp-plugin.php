@@ -63,6 +63,7 @@ class Chouquette_WP_Plugin
 		$this->load_dependencies();
 		$this->define_config_hooks();
 		$this->define_register_hooks();
+		$this->define_yoast_hooks();
 		$this->define_rest_hooks();
 
 	}
@@ -86,6 +87,8 @@ class Chouquette_WP_Plugin
 		require_once plugin_dir_path(dirname(__FILE__)) . 'config/class-chouquette-wp-plugin-config.php';
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'register/class-chouquette-wp-plugin-register.php';
+
+		require_once plugin_dir_path(dirname(__FILE__)) . 'yoast/class-chouquette-wp-plugin-yoast.php';
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/class-chouquette-wp-plugin-rest.php';
 
@@ -165,6 +168,21 @@ class Chouquette_WP_Plugin
 		$this->loader->add_action('init', $plugin_register, 'fiche_post_type');
 
 		$this->loader->add_action('init', $plugin_register, 'icon_info_taxonomy');
+
+	}
+
+	/**
+	 * Register all of the hooks related to yoast.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_yoast_hooks()
+	{
+
+		$plugin_yoast = new Chouquette_WP_Plugin_Yoast($this->get_plugin_name(), $this->get_version());
+
+		$this->loader->add_filter('wpseo_sitemap_url', $plugin_yoast, 'filter_wpseo_sitemap_url', 10, 2);
 
 	}
 
