@@ -374,7 +374,6 @@ class Chouquette_WP_Plugin_Rest
 			$args['tax_query'][] = array(
 				'taxonomy' => 'cq_location',
 				'field' => 'slug',
-				'operator' => 'AND',
 				'terms' => explode(',', $request['location'])
 			);
 		}
