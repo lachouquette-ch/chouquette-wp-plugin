@@ -10,8 +10,8 @@
  * @package Chouquette_WP_Plugin
  *
  * @wordpress-plugin
- * Plugin Name: Chouquette Wordpress REST
- * Description: Plugin to expose Chouquette data using REST. The instance must be pre-initialize with proper register fields and taxonomies
+ * Plugin Name: Chouquette Wordpress Plugin
+ * Description: Everything needed to integration Wordpress in the Chouquette ecosystem : custom post types, hooks, rest endpoints. The instance must be pre-initialize with proper register fields and taxonomies
  * Version: 1.0.0
  * Author: Fabrice Douchant <fabrice.douchant@gmail.com>
  * License: La Chouquette all right reserved
