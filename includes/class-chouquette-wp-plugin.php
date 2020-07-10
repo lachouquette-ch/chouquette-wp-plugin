@@ -65,6 +65,7 @@ class Chouquette_WP_Plugin
 		$this->define_register_hooks();
 		$this->define_yoast_hooks();
 		$this->define_rest_hooks();
+		$this->define_elasticsearch_hooks();
 
 	}
 
@@ -91,6 +92,8 @@ class Chouquette_WP_Plugin
 		require_once plugin_dir_path(dirname(__FILE__)) . 'yoast/class-chouquette-wp-plugin-yoast.php';
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/class-chouquette-wp-plugin-rest.php';
+
+		require_once plugin_dir_path(dirname(__FILE__)) . 'elasticsearch/class-chouquette-wp-plugin-elasticsearch.php';
 
 		$this->loader = new Chouquette_WP_Plugin_Loader();
 
@@ -157,6 +160,21 @@ class Chouquette_WP_Plugin
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'user_members');
 
 	}
+
+    /**
+     * Register all of the hooks related to the rest functionality of the plugin.
+     *
+     * @since    1.0.0
+     * @access   private
+     */
+    private function define_elasticsearch_hooks()
+    {
+
+        $plugin_elasticsearch = new Chouquette_WP_Plugin_Elasticsearch($this->get_plugin_name(), $this->get_version());
+
+        $this->loader->add_action('admin_menu', $plugin_elasticsearch, 'create_menu');
+
+    }
 
 	/**
 	 * Register all of the hooks related to the registration functionality of the plugin.
