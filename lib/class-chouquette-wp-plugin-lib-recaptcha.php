@@ -16,6 +16,7 @@ class Chouquette_WP_Plugin_Lib_Recaptcha
 {
 
 	public static $recaptcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify';
+    // TODO should be store in database
 	public static $recaptcha_secret = '6LeGzZoUAAAAAF35rYtWWthF9Wb_WDB1QPJ3hYG4';
 
 	/**

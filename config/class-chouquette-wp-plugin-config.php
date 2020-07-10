@@ -52,6 +52,7 @@ class Chouquette_WP_Plugin_Config
 	public function acf_fields_google_map_api($api)
 	{
 
+        // TODO should be store in database
 		$api['key'] = 'AIzaSyCL4mYyxlnp34tnC57WyrU_63BJhuRoeKI';
 		return $api;
 
