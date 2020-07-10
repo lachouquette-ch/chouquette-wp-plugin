@@ -14,9 +14,32 @@ if (isset($_POST['create'])) {
         'body' => [
             'settings' => [
                 'analysis' => [
-                    'tokenizer' => 'french',
-                    'filter' => ['lowercase', 'stop', 'word_delimiter_graph'],
+                    'filter' => [
+                        'shingle' => [
+                            'type' => 'shingle'
+                        ],
+                        'french_elision' => [
+                            'type' => 'elision',
+                            'articles_case' => true,
+                            'articles' => [
+                                'l', 'm', 't', 'qu', 'n', 's',
+                                'j', 'd', 'c', 'jusqu', 'quoiqu',
+                                'lorsqu', 'puisqu'
+                            ]
+                        ],
+                        'french_stemmer' => [
+                            'type' => 'stemmer',
+                            'language' => 'light_french'
+                        ]
+                    ],
                     'char_filter' => ['html_strip'],
+                    'analyzer' => [
+                        'lachouquette' => [
+                            'type' => 'custom',
+                            'tokenizer' => 'standard',
+                            'filter' => ['french_elision', 'lowercase', 'stop', 'word_delimiter_graph', 'french_stemmer'],
+                        ]
+                    ]
                 ]
             ],
             'mappings' => [
@@ -26,10 +49,14 @@ if (isset($_POST['create'])) {
                         'format' => 'yyyy-MM-dd HH:mm:ss'
                     ],
                     'content' => [
-                        'type' => 'text'
+                        'type' => 'text',
+                        'analyzer' => 'lachouquette',
+                        'copy_to' => 'combined_content'
                     ],
                     'title' => [
                         'type' => 'text',
+                        'analyzer' => 'lachouquette',
+                        'copy_to' => 'combined_content',
                         'fields' => [
                             'keyword' => [
                                 'type' => 'keyword'
@@ -38,7 +65,12 @@ if (isset($_POST['create'])) {
                     ],
                     'slug' => [
                         'type' => 'text',
+                        'copy_to' => 'combined_content',
                         'index' => false
+                    ],
+                    'combined_content' => [
+                        'type' => 'text',
+                        'analyzer' => 'lachouquette'
                     ],
                     'comment_count' => [
                         'type' => 'integer'
@@ -48,7 +80,7 @@ if (isset($_POST['create'])) {
         ]
     ];
     $client->indices()->create($params);
-    echo "<p><strong>Index created</strong></p>";
+    echo '<p><strong>Index created</strong></p>';
 } elseif (isset($_POST['export'])) {
     /* Posts */
 
@@ -79,24 +111,24 @@ if (isset($_POST['create'])) {
         $responses = $client->bulk($params);
     }
     wp_reset_postdata();
-    echo "<p>Posts exported</p>";
+    echo '<p>Posts exported</p>';
 
     /* Fiches */
     // TODO
-    echo "<p>Fiches exported</p>";
+    echo '<p>Fiches exported</p>';
 } elseif (isset($_POST['delete'])) {
     $response = $client->indices()->delete(array('index' => POST_INDEX));
 
-    echo "<p>Delete index</p>";
+    echo '<p>Delete index</p>';
 }
 ?>
 
     <h1>Administration Elasticsearch</h1>
-    <form method="POST">
-        <p class="submit">
-            <input type="submit" name="export" class="button button-primary" value="Exorter les documents"></input>
-            <input type="submit" name="create" class="button button-primary" value="Créer les indexes"></input>
-            <input type="submit" name="delete" class="button button-secondary" value="Supprimer les indexes"></input>
+    <form method='POST'>
+        <p class='submit'>
+            <input type='submit' name='export' class='button button-primary' value='Exorter les documents'></input>
+            <input type='submit' name='create' class='button button-primary' value='Créer les indexes'></input>
+            <input type='submit' name='delete' class='button button-secondary' value='Supprimer les indexes'></input>
         </p>
     </form>
 
