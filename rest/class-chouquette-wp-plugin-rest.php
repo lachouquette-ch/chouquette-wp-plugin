@@ -529,7 +529,11 @@ class Chouquette_WP_Plugin_Rest
 			'get_callback' => function ($fiche_arr) {
 				$fiche_id = $fiche_arr['id'];
 
-				$posts = get_posts(array(
+				$exclusif_posts = get_posts(array(
+                    'tag__not_in' => array(
+                        Chouquette_WP_Plugin_Lib_Tag::get_tag_ID(Chouquette_WP_Plugin_Lib_Tag::$covid),
+                        Chouquette_WP_Plugin_Lib_Tag::get_tag_ID(Chouquette_WP_Plugin_Lib_Tag::$tops)
+                    ),
 					'meta_query' => array(
 						array(
 							'key' => Chouquette_WP_Plugin_Lib_ACF::FICHE_SELECTOR,
@@ -538,6 +542,22 @@ class Chouquette_WP_Plugin_Rest
 						)
 					)
 				));
+
+                $top_posts = get_posts(array(
+                    'tag__in' => array(
+                        Chouquette_WP_Plugin_Lib_Tag::get_tag_ID(Chouquette_WP_Plugin_Lib_Tag::$covid),
+                        Chouquette_WP_Plugin_Lib_Tag::get_tag_ID(Chouquette_WP_Plugin_Lib_Tag::$tops)
+                    ),
+                    'meta_query' => array(
+                        array(
+                            'key' => Chouquette_WP_Plugin_Lib_ACF::FICHE_SELECTOR,
+                            'value' => '"' . $fiche_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+                            'compare' => 'LIKE'
+                        )
+                    )
+                ));
+
+                $posts = array_merge($exclusif_posts, $top_posts);
 
 				if (empty($posts))
 					return [];

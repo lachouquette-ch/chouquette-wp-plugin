@@ -15,3 +15,4 @@ require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-recaptcha.php'
 require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-acf.php';
 require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-email.php';
 require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-taxonomy.php';
+require_once dirname(__FILE__) . '/class-chouquette-wp-plugin-lib-tag.php';
