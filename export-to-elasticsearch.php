@@ -65,7 +65,6 @@ if (isset($_POST['create'])) {
                     ],
                     'slug' => [
                         'type' => 'text',
-                        'copy_to' => 'combined_content',
                         'index' => false
                     ],
                     'combined_content' => [
