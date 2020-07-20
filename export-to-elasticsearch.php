@@ -8,81 +8,7 @@ const POST_INDEX = 'wp-posts';
 
 $client = ClientBuilder::create()->setHosts(array(NODE_1))->build();
 
-if (isset($_POST['create'])) {
-    $params = [
-        'index' => POST_INDEX,
-        'body' => [
-            'settings' => [
-                'analysis' => [
-                    'filter' => [
-                        'shingle' => [
-                            'type' => 'shingle'
-                        ],
-                        'french_elision' => [
-                            'type' => 'elision',
-                            'articles_case' => true,
-                            'articles' => [
-                                'l', 'm', 't', 'qu', 'n', 's',
-                                'j', 'd', 'c', 'jusqu', 'quoiqu',
-                                'lorsqu', 'puisqu'
-                            ]
-                        ],
-                        'french_stemmer' => [
-                            'type' => 'stemmer',
-                            'language' => 'light_french'
-                        ]
-                    ],
-                    'char_filter' => ['html_strip'],
-                    'analyzer' => [
-                        'lachouquette' => [
-                            'type' => 'custom',
-                            'tokenizer' => 'standard',
-                            'filter' => ['french_elision', 'lowercase', 'stop', 'word_delimiter_graph', 'french_stemmer'],
-                        ]
-                    ]
-                ]
-            ],
-            'mappings' => [
-                'properties' => [
-                    'date' => [
-                        'type' => 'date',
-                        'format' => 'yyyy-MM-dd HH:mm:ss'
-                    ],
-                    'content' => [
-                        'type' => 'text',
-                        'analyzer' => 'lachouquette',
-                        'copy_to' => 'combined_content'
-                    ],
-                    'title' => [
-                        'type' => 'text',
-                        'analyzer' => 'lachouquette',
-                        'copy_to' => 'combined_content',
-                        'fields' => [
-                            'keyword' => [
-                                'type' => 'keyword'
-                            ]
-                        ]
-                    ],
-                    'slug' => [
-                        'type' => 'text',
-                        'index' => false
-                    ],
-                    'combined_content' => [
-                        'type' => 'text',
-                        'analyzer' => 'lachouquette'
-                    ],
-                    'comment_count' => [
-                        'type' => 'integer'
-                    ]
-                ]
-            ]
-        ]
-    ];
-    $client->indices()->create($params);
-    echo '<p><strong>Index created</strong></p>';
-} elseif (isset($_POST['export'])) {
-    /* Posts */
-
+if (isset($_POST['export-posts'])) {
     $post_query = new WP_Query(array(
         'post_type' => 'post',
         'post_status' => 'publish',
@@ -99,12 +25,38 @@ if (isset($_POST['create'])) {
                     '_id' => $post->ID
                 ]
             ];
+
+            /* Build DTO */
+
+            $categories = Chouquette_WP_Plugin_Lib_Category::get_by_post($post->ID);
+            $categories_dto = array_map(function ($category) {
+                return array('id' => $category->term_id, 'slug' => $category->slug, 'name' => $category->name);
+            }, $categories);
+
+            $tags = get_the_tags($post->ID);
+            $tags_dto = array_map(function ($tag) {
+                return array('id' => $tag->term_id, 'slug' => $tag->slug, 'name' => $tag->name);
+            }, $tags);
+
+            $yoast_focus_kw = get_post_meta($post->ID, '_yoast_wpseo_focuskw');
+            $yoast_meta_desc = get_post_meta($post->ID, '_yoast_wpseo_metadesc');
+
+
+            $logo = Chouquette_WP_Plugin_Lib_Category::get_logo($categories[0], 'black');
+            $featured_media = get_the_post_thumbnail_url($post->ID, "medium");
+
             $params['body'][] = [
                 'date' => $post->post_date,
                 'content' => $post->post_content,
                 'title' => $post->post_title,
                 'slug' => $post->post_name,
-                'comment_count' => $post->comment_count
+                'comment_count' => $post->comment_count,
+                'featured_media' => $featured_media,
+                'logo' => $logo,
+                'categories' => $categories_dto,
+                'tags' => $tags_dto,
+                'yoast_focus_kw' => $yoast_focus_kw,
+                'yoast_meta_desc' => $yoast_meta_desc
             ];
         }
         $responses = $client->bulk($params);
@@ -125,9 +77,8 @@ if (isset($_POST['create'])) {
     <h1>Administration Elasticsearch</h1>
     <form method='POST'>
         <p class='submit'>
-            <input type='submit' name='export' class='button button-primary' value='Exorter les documents'></input>
-            <input type='submit' name='create' class='button button-primary' value='Créer les indexes'></input>
-            <input type='submit' name='delete' class='button button-secondary' value='Supprimer les indexes'></input>
+            <input type='submit' name='export-posts' class='button button-primary'
+                   value='Exporter les articles'></input>
         </p>
     </form>
 
