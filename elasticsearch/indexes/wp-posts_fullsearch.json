@@ -1,0 +1,25 @@
+{
+  "_source": {
+    "excludes": "content"
+  },
+  "query": {
+    "multi_match": {
+      "query": "théatre philippe k",
+      "fields": [
+        "yoast_focus_kw^5",
+        "yoast_meta_desc^5",
+        "categories.name^3",
+        "title^3",
+        "slug^3",
+        "content"
+      ],
+      "fuzziness": 1,
+      "prefix_length": 3
+    }
+  },
+  "highlight": {
+    "fields": {
+      "title": {}
+    }
+  }
+}
