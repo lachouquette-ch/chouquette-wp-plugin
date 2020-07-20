@@ -62,7 +62,7 @@ class Chouquette_WP_Plugin_Elasticsearch
 	{
 
 	    function menu_page_callback() {
-	        include __DIR__ . '../../export-to-elasticsearch.php';
+	        include __DIR__ . '/pages/export-to-elasticsearch.php';
         }
 
 	    add_menu_page(
