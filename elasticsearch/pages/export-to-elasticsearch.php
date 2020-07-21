@@ -7,7 +7,11 @@ const NODE_1 = '130.223.16.176:9200';
 const POST_INDEX = 'wp-posts';
 
 $client = ClientBuilder::create()->setHosts(array(NODE_1))->build();
+?>
 
+<h1>Administration Elasticsearch</h1>
+
+<?php
 if (isset($_POST['export-posts'])) {
     $post_query = new WP_Query(array(
         'post_type' => 'post',
@@ -61,26 +65,18 @@ if (isset($_POST['export-posts'])) {
         }
         $responses = $client->bulk($params);
     }
-    wp_reset_postdata();
-    echo '<p>Posts exported</p>';
-
-    /* Fiches */
-    // TODO
-    echo '<p>Fiches exported</p>';
-} elseif (isset($_POST['delete'])) {
+    $stats = $client->indices()->stats(array('index' => POST_INDEX));
+    echo '<p><strong>Result for posts : </strong>' . $stats['_all']['primaries']['docs']['count'] . ' indexed / ' . $post_query->found_posts . ' posts</p>';
+} elseif (isset($_POST['export-posts'])) {
     $response = $client->indices()->delete(array('index' => POST_INDEX));
 
     echo '<p>Delete index</p>';
 }
 ?>
 
-    <h1>Administration Elasticsearch</h1>
-    <form method='POST'>
-        <p class='submit'>
-            <input type='submit' name='export-posts' class='button button-primary'
-                   value='Exporter les articles'></input>
-        </p>
-    </form>
-
-<?php
-?>
+<form method='POST'>
+    <p class='submit'>
+        <input type='submit' name='export-posts' class='button button-primary'
+               value='Exporter les articles'></input>
+    </p>
+</form>

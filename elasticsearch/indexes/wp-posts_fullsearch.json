@@ -13,7 +13,7 @@
         "slug^3",
         "content"
       ],
-      "fuzziness": 1,
+      "fuzziness": "AUTO",
       "prefix_length": 3
     }
   },
