@@ -13,6 +13,8 @@ class Chouquette_WP_Plugin_Lib_Fiche
 
 	const POST_FICHE_FIELD = 'link_fiche';
 	const CHOUQUETTISE_TO = 'chouquettise_to';
+    const LOCATION = 'location';
+    const LOCALISATION = 'cq_localisation';
 
 	/**
 	 * Get all fiches for given post
