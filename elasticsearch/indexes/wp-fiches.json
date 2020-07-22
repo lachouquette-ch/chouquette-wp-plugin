@@ -43,7 +43,7 @@
       "tags.name": {
         "type": "keyword"
       },
-      "critaria.term_name": {
+      "criteria.term_name": {
         "type": "keyword"
       },
       "yoast_focus_kw": {

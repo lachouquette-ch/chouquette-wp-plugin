@@ -6,9 +6,11 @@
     "multi_match": {
       "query": "théatre philippe k",
       "fields": [
+        "tags.name^5",
+        "categories.name^5",
         "yoast_focus_kw^5",
         "yoast_meta_desc^5",
-        "categories.name^3",
+
         "title^3",
         "slug^3",
         "content"

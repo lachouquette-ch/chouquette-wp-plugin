@@ -38,24 +38,60 @@ class Chouquette_WP_Plugin_Lib_Fiche
 
 	}
 
+    /**
+     * Return the chouquettise date for a given fiche
+     *
+     * @param int $fiche_id the fiche id
+     * @return DateTime|null the date or null if none
+     */
+	public static function get_chouquettise_date(int $fiche_id)
+    {
+	    $field = get_field(self::CHOUQUETTISE_TO, $fiche_id);
+		if (!$field) {
+			return null;
+		}
+
+        return DateTime::createFromFormat('d/m/Y', $field);
+    }
+
 	/**
 	 * Return if fiche is chouquettise
 	 *
 	 * @param $fiche_id the id of the fiche
 	 *
 	 * @return true of false if the fiche is chouquettise
-	 *
-	 * @throws Exception
 	 */
 	public static function is_chouquettise(int $fiche_id)
 	{
-		$field = get_field(self::CHOUQUETTISE_TO, $fiche_id);
-		if (!$field) {
-			return false;
-		}
-
-		$chouquettise_to = DateTime::createFromFormat('d/m/Y', $field);
-		return $chouquettise_to >= new DateTime();
+		$chouquettise_to = self::get_chouquettise_date($fiche_id);
+		if ($chouquettise_to) {
+            return $chouquettise_to >= new DateTime();
+        } else {
+		    return false;
+        }
 	}
+
+    /**
+     * Get all localisations including parents
+     *
+     * @param int $fiche_id
+     * @return array list of terms (localisations)
+     */
+    public static function get_all_localisation(int $fiche_id)
+    {
+        $term_id = get_field(self::LOCALISATION, $fiche_id);
+        if (!$term_id) {
+            return null;
+        }
+
+        $result = array();
+        do {
+            $term = get_term($term_id, Chouquette_WP_Plugin_Lib_Taxonomy::TAXONOMY_LOCATION);
+            $result[] = $term;
+            $term_id = $term->parent;
+        } while ($term_id);
+
+        return $result;
+    }
 
 }

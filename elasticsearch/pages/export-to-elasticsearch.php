@@ -78,7 +78,6 @@ if (isset($_POST['export-posts'])) {
         'post_status' => 'publish',
         'nopaging' => 'true',
     ));
-    $processed = 0;
     if ($fiche_query->have_posts()) {
         global $post;
         while ($fiche_query->have_posts()) {
@@ -169,11 +168,8 @@ if (isset($_POST['export-posts'])) {
                 'yoast_focus_kw' => get_post_meta($post->ID, '_yoast_wpseo_focuskw'),
                 'yoast_meta_desc' => get_post_meta($post->ID, '_yoast_wpseo_metadesc')
             ];
-            $processed++;
         }
-        echo ('processed ' . $processed);
         $responses = $client->bulk($params);
-        print_r($responses);
     }
     $stats = $client->indices()->stats(array('index' => FICHE_INDEX));
     echo '<p><strong>Result for fiches : </strong>' . $stats['_all']['primaries']['docs']['count'] . ' indexed / ' . $fiche_query->found_posts . ' posts</p>';
