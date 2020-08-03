@@ -261,6 +261,11 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_field('fiche', 'main_category', array(
 			'get_callback' => function ($fiche_arr) {
+                // case of fiche creation
+			    if ($fiche_arr['status'] === 'auto-draft') {
+			        return;
+                }
+
 				$fiche_id = $fiche_arr['id'];
 
 				$category = Chouquette_WP_Plugin_Rest_Category::get_by_post($fiche_id)[0];
