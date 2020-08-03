@@ -90,9 +90,9 @@ class Chouquette_WP_Plugin_Elasticsearch_Fiche
             'criteria' => $criteria_dto,
 
             'featured_media' => get_the_post_thumbnail_url($fiche->ID, "medium"),
-            'logo' => Chouquette_WP_Plugin_Rest_Category::get_logo($categories[0], 'black'),
-            'marker_icon' => Chouquette_WP_Plugin_Rest_Category::get_marker_icon($categories[0], false),
-            'marker_icon_chouquettise' => Chouquette_WP_Plugin_Rest_Category::get_marker_icon($categories[0], true),
+            'logo' => $categories ? Chouquette_WP_Plugin_Rest_Category::get_logo($categories[0], 'black') : null,
+            'marker_icon' => $categories ? Chouquette_WP_Plugin_Rest_Category::get_marker_icon($categories[0], false) : null,
+            'marker_icon_chouquettise' => $categories ? Chouquette_WP_Plugin_Rest_Category::get_marker_icon($categories[0], true) : null,
 
             'yoast_focus_kw' => get_post_meta($fiche->ID, '_yoast_wpseo_focuskw'),
             'yoast_meta_desc' => get_post_meta($fiche->ID, '_yoast_wpseo_metadesc')
