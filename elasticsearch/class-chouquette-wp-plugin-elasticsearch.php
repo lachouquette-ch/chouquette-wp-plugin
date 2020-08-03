@@ -107,26 +107,6 @@ class Chouquette_WP_Plugin_Elasticsearch
 	}
 
     /**
-     * Remove a fiche from the index
-     *
-     * @param int $ID the fiche ID
-     * @param WP_Post $fiche the fiche object
-     */
-	public function fiche_delete(int $ID, WP_Post $fiche)
-    {
-        if ($fiche->post_status !== 'publish') {
-            return;
-        }
-
-        $params = [
-            'index' => Chouquette_WP_Plugin_Elasticsearch_Fiche::INDEX,
-            'id'    => $ID
-        ];
-
-        $response = $this->client->delete($params);
-    }
-
-    /**
      * Index a fiche
      *
      * @param int $ID the fiche ID
@@ -144,26 +124,6 @@ class Chouquette_WP_Plugin_Elasticsearch
     }
 
     /**
-     * Remove a post from the index
-     *
-     * @param int $ID the fiche ID
-     * @param WP_Post $post the fiche object
-     */
-    public function post_delete(int $ID, WP_Post $post)
-    {
-        if ($post->post_status !== 'publish') {
-            return;
-        }
-
-        $params = [
-            'index' => Chouquette_WP_Plugin_Elasticsearch_Post::INDEX,
-            'id'    => $ID
-        ];
-
-        $response = $this->client->delete($params);
-    }
-
-    /**
      * Index a post
      *
      * @param int $ID the fiche ID
@@ -178,6 +138,39 @@ class Chouquette_WP_Plugin_Elasticsearch
         ];
 
         $response = $this->client->index($params);
+    }
+
+    /**
+     * Remove a post or fiche from the search engine
+     *
+     * @param string $new_status the new post status
+     * @param string $old_status the old post status
+     * @param WP_Post $post the fiche object
+     */
+    public function delete_document(string $new_status, string $old_status, WP_Post $post)
+    {
+        // do not care about non publish status
+        if ($old_status !== 'publish' || $new_status === $old_status) {
+            return;
+        }
+
+        switch ($post->post_type) {
+            case 'post':
+                $index = Chouquette_WP_Plugin_Elasticsearch_Post::INDEX;
+                break;
+            case 'fiche':
+                $index = Chouquette_WP_Plugin_Elasticsearch_Fiche::INDEX;
+                break;
+            default:
+                return; // only post of fiche
+        }
+
+        $params = [
+            'index' => $index,
+            'id'    => $post->ID
+        ];
+
+        $response = $this->client->delete($params);
     }
 
 }

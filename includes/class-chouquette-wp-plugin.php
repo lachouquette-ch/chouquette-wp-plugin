@@ -174,15 +174,9 @@ class Chouquette_WP_Plugin
 
         $this->loader->add_action('publish_fiche', $plugin_elasticsearch, 'fiche_index', 10, 2);
 
-        $this->loader->add_action('draft_fiche', $plugin_elasticsearch, 'fiche_delete', 10, 2);
-
-        $this->loader->add_action('trash_fiche', $plugin_elasticsearch, 'fiche_delete', 10, 2);
-
         $this->loader->add_action('publish_post', $plugin_elasticsearch, 'post_index', 10, 2);
 
-        $this->loader->add_action('draft_post', $plugin_elasticsearch, 'post_delete', 10, 2);
-
-        $this->loader->add_action('trash_post', $plugin_elasticsearch, 'post_delete', 10, 2);
+        $this->loader->add_action('transition_post_status', $plugin_elasticsearch, 'delete_document', 10, 3);
 
     }
 
