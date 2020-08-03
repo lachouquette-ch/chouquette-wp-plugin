@@ -114,6 +114,10 @@ class Chouquette_WP_Plugin_Elasticsearch
      */
 	public function fiche_delete(int $ID, WP_Post $fiche)
     {
+        if ($fiche->post_status !== 'publish') {
+            return;
+        }
+
         $params = [
             'index' => Chouquette_WP_Plugin_Elasticsearch_Fiche::INDEX,
             'id'    => $ID
@@ -147,6 +151,10 @@ class Chouquette_WP_Plugin_Elasticsearch
      */
     public function post_delete(int $ID, WP_Post $post)
     {
+        if ($post->post_status !== 'publish') {
+            return;
+        }
+
         $params = [
             'index' => Chouquette_WP_Plugin_Elasticsearch_Post::INDEX,
             'id'    => $ID
