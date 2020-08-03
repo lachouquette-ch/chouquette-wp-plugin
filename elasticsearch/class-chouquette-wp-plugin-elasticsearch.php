@@ -1,5 +1,9 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Elasticsearch\ClientBuilder;
+
 /**
  * The elasticsearch functionality of the plugin.
  *
@@ -12,6 +16,11 @@ class Chouquette_WP_Plugin_Elasticsearch
 {
 
     const NODE_1 = '130.223.16.176:9200';
+
+    /**
+     * @var   Elasticsearch\Client $client The elasticsearch client
+     */
+    private $client;
 
 	/**
 	 * The ID of this plugin.
@@ -52,6 +61,7 @@ class Chouquette_WP_Plugin_Elasticsearch
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->client = ClientBuilder::create()->setHosts(array(Chouquette_WP_Plugin_Elasticsearch::NODE_1))->build();
 
         $this->load_dependencies();
 
@@ -95,5 +105,71 @@ class Chouquette_WP_Plugin_Elasticsearch
         );
 
 	}
+
+    /**
+     * Remove a fiche from the index
+     *
+     * @param int $ID the fiche ID
+     * @param WP_Post $fiche the fiche object
+     */
+	public function fiche_delete(int $ID, WP_Post $fiche)
+    {
+        $params = [
+            'index' => Chouquette_WP_Plugin_Elasticsearch_Fiche::INDEX,
+            'id'    => $ID
+        ];
+
+        $response = $this->client->delete($params);
+    }
+
+    /**
+     * Index a fiche
+     *
+     * @param int $ID the fiche ID
+     * @param WP_Post $fiche the fiche object
+     */
+    public function fiche_index(int $ID, WP_Post $fiche)
+    {
+        $params = [
+            'index' => Chouquette_WP_Plugin_Elasticsearch_Fiche::INDEX,
+            'id'    => $ID,
+            'body'  => Chouquette_WP_Plugin_Elasticsearch_Fiche::build_dto($fiche)
+        ];
+
+        $response = $this->client->index($params);
+    }
+
+    /**
+     * Remove a post from the index
+     *
+     * @param int $ID the fiche ID
+     * @param WP_Post $post the fiche object
+     */
+    public function post_delete(int $ID, WP_Post $post)
+    {
+        $params = [
+            'index' => Chouquette_WP_Plugin_Elasticsearch_Post::INDEX,
+            'id'    => $ID
+        ];
+
+        $response = $this->client->delete($params);
+    }
+
+    /**
+     * Index a post
+     *
+     * @param int $ID the fiche ID
+     * @param WP_Post $post the fiche object
+     */
+    public function post_index(int $ID, WP_Post $post)
+    {
+        $params = [
+            'index' => Chouquette_WP_Plugin_Elasticsearch_Post::INDEX,
+            'id'    => $ID,
+            'body'  => Chouquette_WP_Plugin_Elasticsearch_Post::build_dto($post)
+        ];
+
+        $response = $this->client->index($params);
+    }
 
 }
