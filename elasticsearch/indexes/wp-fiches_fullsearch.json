@@ -1,0 +1,24 @@
+{
+  "_source": ["_id", "title", "categories.name", "criteria.term_name", "location.address"],
+  "query": {
+    "multi_match": {
+      "query": "bière",
+      "fields": [
+        "localisation.name^5",
+        "categories.name^5",
+        "tags.name^5",
+        "critaria.term_name^5",
+
+        "location.address^3",
+        "yoast_focus_kw^3",
+        "yoast_meta_desc^3",
+
+        "title",
+        "slug",
+        "content"
+      ],
+      "fuzziness": "AUTO",
+      "prefix_length": 3
+    }
+  }
+}
