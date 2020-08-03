@@ -11,7 +11,7 @@
 class Chouquette_WP_Plugin_Elasticsearch_Fiche
 {
 
-    const FICHE_INDEX = 'wp-fiches';
+    const INDEX = 'wp-fiches';
 
     /**
      * Build elasticsearch DTO from Fiche
@@ -21,15 +21,36 @@ class Chouquette_WP_Plugin_Elasticsearch_Fiche
      */
     public static function build_dto(WP_Post $fiche)
     {
-        $categories = Chouquette_WP_Plugin_Rest_Category::get_by_post($fiche->ID);
-
-        if ($categories) {
-            $categories_dto = array_map(function ($category) {
-                return array('id' => $category->term_id, 'slug' => $category->slug, 'name' => $category->name);
-            }, $categories);
+        if (Chouquette_WP_Plugin_Rest_Fiche::get_chouquettise_date($fiche->ID)) {
+            $chouquettise_end = Chouquette_WP_Plugin_Rest_Fiche::get_chouquettise_date($fiche->ID)->format('Y-m-d');
         } else {
-            $categories_dto = null;
+            $chouquettise_end = null;
         }
+
+        $localisations = Chouquette_WP_Plugin_Rest_Fiche::get_all_localisation($fiche->ID);
+        if ($localisations) {
+            $localisations_dto = array_map(function ($localisation) {
+                return array('id' => $localisation->term_id, 'slug' => $localisation->slug, 'name' => $localisation->name);
+            }, $localisations);
+        } else {
+            $localisations_dto = null;
+        }
+
+        $location = get_field(Chouquette_WP_Plugin_Rest_Fiche::LOCATION, $fiche->ID);
+        if ($location) {
+            $location_dto = array();
+            $location_dto['address'] = $location['address'];
+            if ($location['lat'] && $location['lng']) {
+                $location_dto['position'] = sprintf("%f,%f", $location['lat'], $location['lng']);
+            }
+        } else {
+            $location_dto = null;
+        }
+
+        $categories = Chouquette_WP_Plugin_Rest_Category::get_by_post($fiche->ID);
+        $categories_dto = array_map(function ($category) {
+            return array('id' => $category->term_id, 'slug' => $category->slug, 'name' => $category->name);
+        }, $categories);
 
         $tags = get_the_tags($fiche->ID);
         if ($tags) {
@@ -40,21 +61,41 @@ class Chouquette_WP_Plugin_Elasticsearch_Fiche
             $tags_dto = null;
         }
 
+        $criteria_list = Chouquette_WP_Plugin_Rest_Taxonomy::fetch_fiche_criteria($fiche->ID);
+        $criteria_dto = array();
+        foreach ($criteria_list as $criteria) {
+            foreach ($criteria['values'] as $term) {
+                $criteria_dto[] = array(
+                    'taxonomy' => $criteria['taxonomy'],
+                    'criteria_id' => $criteria['ID'],
+                    'criteria_label' => $criteria['label'],
+                    'term_id' => $term->term_id,
+                    'term_name' => $term->name,
+                    'term_slug' => $term->slug
+                );
+            }
+        }
+
         $result = [
             'date' => $fiche->post_date,
             'content' => $fiche->post_content,
             'title' => $fiche->post_title,
             'slug' => $fiche->post_name,
-            'comment_count' => $fiche->comment_count,
+            'chouquettise_end' => $chouquettise_end,
+            'location' => $location_dto,
 
+            'localisation' => $localisations_dto,
             'categories' => $categories_dto,
             'tags' => $tags_dto,
+            'criteria' => $criteria_dto,
 
             'featured_media' => get_the_post_thumbnail_url($fiche->ID, "medium"),
             'logo' => Chouquette_WP_Plugin_Rest_Category::get_logo($categories[0], 'black'),
+            'marker_icon' => Chouquette_WP_Plugin_Rest_Category::get_marker_icon($categories[0], false),
+            'marker_icon_chouquettise' => Chouquette_WP_Plugin_Rest_Category::get_marker_icon($categories[0], true),
 
             'yoast_focus_kw' => get_post_meta($fiche->ID, '_yoast_wpseo_focuskw'),
-            'yoast_meta_desc' => get_post_meta($fiche->ID, '_yoast_wpseo_metadesc'),
+            'yoast_meta_desc' => get_post_meta($fiche->ID, '_yoast_wpseo_metadesc')
         ];
 
         return $result;

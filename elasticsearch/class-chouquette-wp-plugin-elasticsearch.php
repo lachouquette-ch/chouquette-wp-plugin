@@ -12,11 +12,6 @@ class Chouquette_WP_Plugin_Elasticsearch
 {
 
     const NODE_1 = '130.223.16.176:9200';
-    const POST_INDEX = 'wp-posts';
-
-
-
-
 
 	/**
 	 * The ID of this plugin.
@@ -58,7 +53,25 @@ class Chouquette_WP_Plugin_Elasticsearch
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+        $this->load_dependencies();
+
 	}
+
+    /**
+     * Load the required dependencies for this plugin.
+     *
+     * Create an instance of the loader which will be used to register the hooks
+     * with WordPress.
+     *
+     * @since    1.0.0
+     * @access   private
+     */
+    private function load_dependencies()
+    {
+
+        require_once plugin_dir_path(dirname(__FILE__)) . 'elasticsearch/lib/_import_.php';
+
+    }
 
 	/**
 	 * Create menu to manage elasticsearch export
