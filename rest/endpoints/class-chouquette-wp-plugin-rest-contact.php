@@ -35,7 +35,7 @@ class Chouquette_WP_Plugin_Rest_Contact extends WP_REST_Controller
 			);
 		}
 
-		if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+		if (!Chouquette_WP_Plugin_Rest_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
 			return new WP_Error(
 				'rest_contact_recaptcha_invalid',
 				__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
@@ -64,7 +64,7 @@ class Chouquette_WP_Plugin_Rest_Contact extends WP_REST_Controller
 		print_r($request);
 		echo($contact_mail);
 
-		$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
+		$result = Chouquette_WP_Plugin_Rest_Email::send_mail(
 			$request->get_param('name'),
 			$request->get_param('email'),
 			$contact_mail,

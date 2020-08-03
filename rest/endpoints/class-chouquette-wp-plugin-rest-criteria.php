@@ -153,7 +153,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	public function get_item_for_fiche($request)
 	{
 
-        $criteria = Chouquette_WP_Plugin_Lib_Taxonomy::fetch_fiche_criteria($request['id']);
+        $criteria = Chouquette_WP_Plugin_Rest_Taxonomy::fetch_fiche_criteria($request['id']);
 
         return array_map(function ($criteria) use ($request) {
             $response = $this->prepare_item_for_response($criteria, $request);
@@ -171,7 +171,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 	public function get_item_for_category($request)
 	{
 
-        $criteria = Chouquette_WP_Plugin_Lib_Taxonomy::fetch_category_criteria($request['id']);
+        $criteria = Chouquette_WP_Plugin_Rest_Taxonomy::fetch_category_criteria($request['id']);
 
         return array_map(function ($criteria) use ($request) {
             $response = $this->prepare_item_for_response($criteria, $request);

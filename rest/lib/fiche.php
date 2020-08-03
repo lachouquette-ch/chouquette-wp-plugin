@@ -8,7 +8,7 @@
  * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Lib_Fiche
+class Chouquette_WP_Plugin_Rest_Fiche
 {
 
 	const POST_FICHE_FIELD = 'link_fiche';
@@ -86,7 +86,7 @@ class Chouquette_WP_Plugin_Lib_Fiche
 
         $result = array();
         do {
-            $term = get_term($term_id, Chouquette_WP_Plugin_Lib_Taxonomy::TAXONOMY_LOCATION);
+            $term = get_term($term_id, Chouquette_WP_Plugin_Rest_Taxonomy::TAXONOMY_LOCATION);
             $result[] = $term;
             $term_id = $term->parent;
         } while ($term_id);

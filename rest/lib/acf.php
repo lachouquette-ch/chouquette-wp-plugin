@@ -8,7 +8,7 @@
  * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Lib_ACF
+class Chouquette_WP_Plugin_Rest_ACF
 {
 
 	const ACF_FIELD_GROUP_TYPE = 'group';

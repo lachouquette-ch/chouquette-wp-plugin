@@ -87,7 +87,7 @@ class Chouquette_WP_Plugin_Rest
 	{
 
 		// link_fiche
-		register_meta('post', Chouquette_WP_Plugin_Lib_ACF::FICHE_SELECTOR, array(
+		register_meta('post', Chouquette_WP_Plugin_Rest_ACF::FICHE_SELECTOR, array(
 			'single' => true,
 			'show_in_rest' => array(
 				'schema' => array(
@@ -133,7 +133,7 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_field('post', 'top_categories', array(
 			'get_callback' => function ($post_arr) {
-				$categories = Chouquette_WP_Plugin_Lib_Category::get_by_post($post_arr['id']);
+				$categories = Chouquette_WP_Plugin_Rest_Category::get_by_post($post_arr['id']);
 
 				return array_map(function ($category) {
 					return $category->term_id;
@@ -195,7 +195,7 @@ class Chouquette_WP_Plugin_Rest
 			);
 		}
 		try {
-			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request['recaptcha'])) {
+			if (!Chouquette_WP_Plugin_Rest_Recaptcha::validateRecaptchaToken($request['recaptcha'])) {
 				return new WP_Error(
 					'rest_comment_recaptcha_invalid',
 					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton commentaire. Merci de re-essayer."),
@@ -229,14 +229,14 @@ class Chouquette_WP_Plugin_Rest
 				$fields_social_networks = ['sn_twitter', 'sn_facebook', 'sn_instagram', 'sn_printerest', 'sn_linkedin'];
 				$fields_openings = ['opening_sunday', 'opening_monday', 'opening_tuesday', 'opening_wednesday', 'opening_thursday', 'opening_friday', 'opening_saturday'];
 
-				$data = Chouquette_WP_Plugin_Lib_ACF::get_values($fields_basic, $fiche_id);
+				$data = Chouquette_WP_Plugin_Rest_ACF::get_values($fields_basic, $fiche_id);
 
-				$data['chouquettise'] = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
+				$data['chouquettise'] = Chouquette_WP_Plugin_Rest_Fiche::is_chouquettise($fiche_id);
 
-				if (Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id)) {
-					$data = array_merge($data, Chouquette_WP_Plugin_Lib_ACF::get_values($fields_social_networks, $fiche_id));
+				if (Chouquette_WP_Plugin_Rest_Fiche::is_chouquettise($fiche_id)) {
+					$data = array_merge($data, Chouquette_WP_Plugin_Rest_ACF::get_values($fields_social_networks, $fiche_id));
 					// group openings in same attribute and use array index instead of field (starting from 0 : sunday as day week)
-					$openings = array_values(Chouquette_WP_Plugin_Lib_ACF::get_values($fields_openings, $fiche_id));
+					$openings = array_values(Chouquette_WP_Plugin_Rest_ACF::get_values($fields_openings, $fiche_id));
 					$data['openings'] = empty($openings) ? null : $openings;
 				}
 
@@ -262,15 +262,15 @@ class Chouquette_WP_Plugin_Rest
 			'get_callback' => function ($fiche_arr) {
 				$fiche_id = $fiche_arr['id'];
 
-				$category = Chouquette_WP_Plugin_Lib_Category::get_by_post($fiche_id)[0];
-				$is_chouquettise = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
+				$category = Chouquette_WP_Plugin_Rest_Category::get_by_post($fiche_id)[0];
+				$is_chouquettise = Chouquette_WP_Plugin_Rest_Fiche::is_chouquettise($fiche_id);
 
 				$data = array();
 				$data['id'] = $category->term_id;
 				$data['slug'] = $category->slug;
 				$data['name'] = $category->name;
-				$data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
-				$data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category, 'black');
+				$data['marker_icon'] = Chouquette_WP_Plugin_Rest_Category::get_marker_icon($category, $is_chouquettise);
+				$data['logo'] = Chouquette_WP_Plugin_Rest_Category::get_logo($category, 'black');
 
 				return $data;
 			},
@@ -307,7 +307,7 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 
-			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+			if (!Chouquette_WP_Plugin_Rest_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
 				return new WP_Error(
 					'rest_fiche_recaptcha_invalid',
 					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
@@ -319,7 +319,7 @@ class Chouquette_WP_Plugin_Rest
 
 			$post_type_object = get_post_type_object('fiche');
 			$fiche_edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $request->get_param('id')));
-			$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
+			$result = Chouquette_WP_Plugin_Rest_Email::send_mail(
 				$request->get_param('name'),
 				$request->get_param('email'),
 				MAIL_FALLBACK,
@@ -349,7 +349,7 @@ class Chouquette_WP_Plugin_Rest
 	 */
 	public function fiche_sort_by_chouquettise_filter($args, $request)
 	{
-		$args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO;
+		$args['meta_key'] = Chouquette_WP_Plugin_Rest_Fiche::CHOUQUETTISE_TO;
 		$args['meta_type'] = 'DATE';
 		$args['orderby'] = 'meta_value date';
 		$args['order'] = 'DESC DESC';
@@ -378,7 +378,7 @@ class Chouquette_WP_Plugin_Rest
 			);
 		}
 
-		$cq_taxonomies = Chouquette_WP_Plugin_Lib_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
+		$cq_taxonomies = Chouquette_WP_Plugin_Rest_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
 
 		if (!empty($cq_taxonomies)) {
 			foreach ($cq_taxonomies as $taxonomy => $terms) {
@@ -419,7 +419,7 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 
-			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+			if (!Chouquette_WP_Plugin_Rest_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
 				return new WP_Error(
 					'rest_fiche_recaptcha_invalid',
 					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
@@ -441,7 +441,7 @@ class Chouquette_WP_Plugin_Rest
 			$post_type_object = get_post_type_object('fiche');
 			$fiche_edit_link = admin_url(sprintf($post_type_object->_edit_link . '&action=edit', $request->get_param('id')));
 
-			$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
+			$result = Chouquette_WP_Plugin_Rest_Email::send_mail(
 				$request->get_param('name'),
 				$request->get_param('email'),
 				$fiche_email,
@@ -489,7 +489,7 @@ class Chouquette_WP_Plugin_Rest
 			$data['roles'] = array_values($user->roles);
 			$data['registered_date'] = gmdate('c', strtotime($user->user_registered));
 			$data['avatar_urls'] = rest_get_avatar_urls($user);
-			$data['title'] = get_field(Chouquette_WP_Plugin_Lib_ACF::CQ_USER_ROLE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($user));
+			$data['title'] = get_field(Chouquette_WP_Plugin_Rest_ACF::CQ_USER_ROLE, Chouquette_WP_Plugin_Rest_ACF::generate_post_id($user));
 
 			return $data;
 		}
@@ -532,7 +532,7 @@ class Chouquette_WP_Plugin_Rest
 				$posts = get_posts(array(
 					'meta_query' => array(
 						array(
-							'key' => Chouquette_WP_Plugin_Lib_ACF::FICHE_SELECTOR,
+							'key' => Chouquette_WP_Plugin_Rest_ACF::FICHE_SELECTOR,
 							'value' => '"' . $fiche_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
 							'compare' => 'LIKE'
 						)

@@ -28,7 +28,7 @@ endif;
  * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Lib_Email
+class Chouquette_WP_Plugin_Rest_Email
 {
 
 	const LOGO_ID = 18066;

@@ -8,7 +8,7 @@
  * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Lib_Category
+class Chouquette_WP_Plugin_Rest_Category
 {
 
 	const BAR_RETOS = 'bar-et-restaurant';
@@ -63,7 +63,7 @@ class Chouquette_WP_Plugin_Lib_Category
 	public static function get_by_post(int $id, int $parent_id = null)
 	{
 		// get fiche
-		$linkFiches = Chouquette_WP_Plugin_Lib_Fiche::get_all_by_post($id);
+		$linkFiches = Chouquette_WP_Plugin_Rest_Fiche::get_all_by_post($id);
 		if (!empty($linkFiches)) {
 			$post_ids = array_column($linkFiches, 'ID');
 		} else {
@@ -106,9 +106,9 @@ class Chouquette_WP_Plugin_Lib_Category
 	public static function get_marker_icon(object $category, bool $is_chouquettise)
 	{
 		if ($is_chouquettise) {
-			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_YELLOW, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_YELLOW, Chouquette_WP_Plugin_Rest_ACF::generate_post_id($category));
 		} else {
-			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_WHITE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_WHITE, Chouquette_WP_Plugin_Rest_ACF::generate_post_id($category));
 		}
 		$image_src = wp_get_attachment_image_src($icon_id, 'full')[0];
 		return $image_src;
@@ -127,13 +127,13 @@ class Chouquette_WP_Plugin_Lib_Category
 	{
 		switch ($color) {
 			case 'white':
-				$logo_id = get_field(self::CQ_CATEGORY_LOGO_WHITE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				$logo_id = get_field(self::CQ_CATEGORY_LOGO_WHITE, Chouquette_WP_Plugin_Rest_ACF::generate_post_id($category));
 				break;
 			case 'black':
-				$logo_id = get_field(self::CQ_CATEGORY_LOGO_BLACK, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				$logo_id = get_field(self::CQ_CATEGORY_LOGO_BLACK, Chouquette_WP_Plugin_Rest_ACF::generate_post_id($category));
 				break;
 			case 'yellow':
-				$logo_id = get_field(self::CQ_CATEGORY_LOGO_YELLOW, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				$logo_id = get_field(self::CQ_CATEGORY_LOGO_YELLOW, Chouquette_WP_Plugin_Rest_ACF::generate_post_id($category));
 				break;
 			default:
 				throw new Exception("$color is undefined");

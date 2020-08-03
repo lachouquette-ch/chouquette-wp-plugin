@@ -8,7 +8,7 @@
  * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Lib_Taxonomy
+class Chouquette_WP_Plugin_Rest_Taxonomy
 {
 
     const TAXONOMY_LOCATION = 'cq_location';
@@ -52,13 +52,13 @@ class Chouquette_WP_Plugin_Lib_Taxonomy
             if ($category->parent === 0) {
                 $top_categories[] = $category;
             }
-            $acf_field = Chouquette_WP_Plugin_Lib_ACF::get_field_object($category->slug);
+            $acf_field = Chouquette_WP_Plugin_Rest_ACF::get_field_object($category->slug);
             // no acf field for category ? (can be...)
             if (empty($acf_field)) {
                 continue;
             }
 
-            $taxonomy_fields = Chouquette_WP_Plugin_Lib_ACF::get_taxonomy_fields($acf_field[0]);
+            $taxonomy_fields = Chouquette_WP_Plugin_Rest_ACF::get_taxonomy_fields($acf_field[0]);
 
             $result[] = array($category->term_id => $taxonomy_fields);
         }
@@ -66,11 +66,11 @@ class Chouquette_WP_Plugin_Lib_Taxonomy
         // get overall fields except for services
         $candidate_categories = array_filter($top_categories,
             function ($category) {
-                return $category->slug != Chouquette_WP_Plugin_Lib_Category::SERVICES;
+                return $category->slug != Chouquette_WP_Plugin_Rest_Category::SERVICES;
             }
         );
         if (!empty($candidate_categories)) {
-            $taxonomy_fields = Chouquette_WP_Plugin_Lib_ACF::get_field_object(self::TAXONOMY_CRITERIA);
+            $taxonomy_fields = Chouquette_WP_Plugin_Rest_ACF::get_field_object(self::TAXONOMY_CRITERIA);
 
             $result[] = array(0 => $taxonomy_fields);
         }
@@ -88,7 +88,7 @@ class Chouquette_WP_Plugin_Lib_Taxonomy
     public static function fetch_fiche_criteria(int $fiche_id)
     {
 
-        $categories = Chouquette_WP_Plugin_Lib_Category::get_all_by_post($fiche_id);
+        $categories = Chouquette_WP_Plugin_Rest_Category::get_all_by_post($fiche_id);
 
         $category_criteria_list = self::compute_category_criteria($categories);
 

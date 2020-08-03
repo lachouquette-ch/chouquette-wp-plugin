@@ -12,7 +12,7 @@ class Chouquette_WP_Plugin_Lib_Recaptcha_Exception extends Exception
  * @subpackage    Chouquette_WP_Plugin/lib
  * @author        Fabrice Douchant <fabrice.douchant@gmail.com>
  */
-class Chouquette_WP_Plugin_Lib_Recaptcha
+class Chouquette_WP_Plugin_Rest_Recaptcha
 {
 
 	public static $recaptcha_verify_url = 'https://www.google.com/recaptcha/api/siteverify';
@@ -30,7 +30,7 @@ class Chouquette_WP_Plugin_Lib_Recaptcha
 	public static function validateRecaptchaToken(string $recaptcha_token, float $min_score_success = 0.5)
 	{
 		// Make and decode POST request
-		$recaptcha = file_get_contents(Chouquette_WP_Plugin_Lib_Recaptcha::$recaptcha_verify_url . '?secret=' . Chouquette_WP_Plugin_Lib_Recaptcha::$recaptcha_secret . '&response=' . $recaptcha_token);
+		$recaptcha = file_get_contents(Chouquette_WP_Plugin_Rest_Recaptcha::$recaptcha_verify_url . '?secret=' . Chouquette_WP_Plugin_Rest_Recaptcha::$recaptcha_secret . '&response=' . $recaptcha_token);
 		$recaptcha = json_decode($recaptcha);
 
 		// Take action based on the score returned:
