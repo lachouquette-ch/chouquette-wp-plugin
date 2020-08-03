@@ -83,8 +83,6 @@ class Chouquette_WP_Plugin
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-chouquette-wp-plugin-loader.php';
 
-		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/lib/_import_.php';
-
 		require_once plugin_dir_path(dirname(__FILE__)) . 'config/class-chouquette-wp-plugin-config.php';
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'register/class-chouquette-wp-plugin-register.php';

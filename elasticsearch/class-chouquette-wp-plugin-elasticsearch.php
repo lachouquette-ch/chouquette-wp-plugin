@@ -11,6 +11,13 @@
 class Chouquette_WP_Plugin_Elasticsearch
 {
 
+    const NODE_1 = '130.223.16.176:9200';
+    const POST_INDEX = 'wp-posts';
+
+
+
+
+
 	/**
 	 * The ID of this plugin.
 	 *

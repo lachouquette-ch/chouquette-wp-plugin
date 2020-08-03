@@ -70,7 +70,8 @@ class Chouquette_WP_Plugin_Rest
 	private function load_dependencies()
 	{
 
-		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-criteria.php';
+        require_once plugin_dir_path(dirname(__FILE__)) . 'rest/lib/_import_.php';
+	    require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-criteria.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-contact.php';
 
 		$this->criteria_controller = new Chouquette_WP_Plugin_Rest_Criteria();
