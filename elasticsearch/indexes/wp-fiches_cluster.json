@@ -1,0 +1,69 @@
+{
+  "_source": false,
+  "size": 0,
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "exists": {
+            "field": "location.position"
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+    "large-grid": {
+      "geohash_grid": {
+        "field": "location.position",
+        "precision": 4
+      },
+      "aggs": {
+        "data": {
+          "scripted_metric": {
+            "init_script": """
+            state.now = ZonedDateTime.parse(params.now);
+            // chouquettise : true if any fiche is chouquettise in the agg
+            state.chouquettise = false;
+            // document id : set if there is only one 1 for the agg ; else null (multiple) or 0 (none)
+            state.id = 0;
+            """,
+            "map_script": """
+            // skip testing if there is already a chouquettise (optimize)
+            if (state.chouquettise != true && doc.chouquettise_end.size() > 0 && doc.chouquettise_end.value.isAfter(state.now)) {
+  state.chouquettise = true;
+}
+// only set the id once, unset if more than one document
+if (state.id === 0) {
+  state.id = Integer.parseInt(doc._id.value);
+} else if (state.id !== null) {
+  state.id = null;
+}
+""",
+"combine_script": """
+return [state.chouquettise, state.id]
+""",
+"reduce_script": """
+Map result = new HashMap();
+result['chouquettise'] = states.stream().anyMatch(e -> e.get(0) === true);
+
+// if one is null, more than one document
+if (states.stream().anyMatch(e -> e.get(1) === null)) {
+result['id'] = null;
+} else {
+ArrayList ids = states.stream().map(e -> e.get(1)).filter(Objects::nonNull).collect(Collectors.toList());
+// might also be 1 document on several shards
+result['id'] = ids.size() === 1 ? ids.get(0) : null;
+}
+
+return result;
+""",
+"params": {
+"now": "2020-08-04T08:36:28.446Z"
+}
+}
+}
+}
+}
+}
+}
