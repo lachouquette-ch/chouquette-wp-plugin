@@ -30,11 +30,6 @@ if (!defined('WPINC')) {
 define('CHOUQUETTE_WP_PLUGIN_VERSION', '1.0.0');
 
 /**
- * Website URL (SPA)
- */
-define('CHOUQUETTE_WP_PLUGIN_WEBSITE_URL', 'https://lachouquette.ch');
-
-/**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-plugin-name-activator.php
  */

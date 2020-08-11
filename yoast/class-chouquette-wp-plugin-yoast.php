@@ -52,7 +52,7 @@ class Chouquette_WP_Plugin_Yoast
 	function filter_wpseo_sitemap_url($output, $url)
 	{
 
-		return str_replace(home_url(), CHOUQUETTE_WP_PLUGIN_WEBSITE_URL, $output);;
+		return str_replace(home_url(), CQ_FRONTEND_DOMAIN, $output);;
 
 	}
 

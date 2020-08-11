@@ -67,7 +67,7 @@ class Chouquette_WP_Plugin_Config
 
 		$nonce = wp_create_nonce('wp_rest');
 
-		return CHOUQUETTE_WP_PLUGIN_WEBSITE_URL . '/preview?type=' . $post->post_type . '&id=' . $post->ID . '&nonce=' . $nonce;
+		return CQ_FRONTEND_DOMAIN . '/preview?type=' . $post->post_type . '&id=' . $post->ID . '&nonce=' . $nonce;
 
 	}
 

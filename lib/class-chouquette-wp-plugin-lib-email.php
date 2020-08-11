@@ -72,8 +72,8 @@ EOT;
 		$body = sprintf($body_template,
 			$subject,
 			nl2br(stripslashes($message)),
-            CHOUQUETTE_WP_PLUGIN_WEBSITE_URL, CHOUQUETTE_WP_PLUGIN_WEBSITE_URL,
-            CHOUQUETTE_WP_PLUGIN_WEBSITE_URL, get_bloginfo('name'),
+            CQ_FRONTEND_DOMAIN, CQ_FRONTEND_DOMAIN,
+            CQ_FRONTEND_DOMAIN, get_bloginfo('name'),
 			$logo_url, get_bloginfo('name'),
 			get_bloginfo('description'));
 
