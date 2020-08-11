@@ -269,8 +269,10 @@ class Chouquette_WP_Plugin_Rest
 				$data['id'] = $category->term_id;
 				$data['slug'] = $category->slug;
 				$data['name'] = $category->name;
-				$data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
-				$data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category, 'black');
+				if ($category) {
+                    $data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
+                    $data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category, 'black');
+                }
 
 				return $data;
 			},
