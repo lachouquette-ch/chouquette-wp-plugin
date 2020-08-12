@@ -107,6 +107,8 @@ class Chouquette_WP_Plugin
 
 		$plugin_config = new Chouquette_WP_Plugin_Config($this->get_plugin_name(), $this->get_version());
 
+        add_filter( 'wp_sitemaps_enabled', '__return_false' );
+
 		$this->loader->add_filter('acf/fields/google_map/api', $plugin_config, 'acf_fields_google_map_api');
 
 		$this->loader->add_filter('preview_post_link', $plugin_config, 'preview_post_link', 10, 2);
