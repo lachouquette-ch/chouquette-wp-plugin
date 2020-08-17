@@ -71,6 +71,60 @@ class Chouquette_WP_Plugin_Config
 
 	}
 
+    /**
+     * Change the domain in all post links. Using Frontend link instead of wordpress link
+     *
+     * @param $post_url
+     * @param $post
+     * @return string|string[]
+     */
+    public function change_domain_link($post_url, $post) {
+
+        return str_replace(home_url(), CQ_FRONTEND_DOMAIN, $post_url);
+
+    }
+
+    // FIXME workaround script until there's an official solution for https://github.com/WordPress/gutenberg/issues/13998
+    public function fix_preview_link_on_draft() {
+        echo '<script type="text/javascript">
+            jQuery(document).ready(function () {
+                const checkPreviewInterval = setInterval(checkPreview, 1000);
+                function checkPreview() {
+                    const editorPreviewButton = jQuery(".editor-post-preview");
+                    const editorPostSaveDraft = jQuery(".editor-post-save-draft");
+                    const editorPostHeaderPreview = jQuery(".edit-post-header-preview__button-external");
+                    if (editorPostSaveDraft.length && editorPreviewButton.length && editorPostHeaderPreview.length && editorPreviewButton.attr("href") !== "' . get_preview_post_link() . '" ) {
+                        editorPreviewButton.attr("href", "' . get_preview_post_link() . '");
+                        editorPreviewButton.off();
+                        editorPreviewButton.click(false);
+                        editorPreviewButton.on("click", function() {
+                            editorPostSaveDraft.click();
+                            setTimeout(function() { 
+                                const win = window.open("' . get_preview_post_link() . '", "_blank");
+                                if (win) {
+                                    win.focus();
+                                }
+                            }, 1000);
+                        });
+                        // same for post header preview
+                        editorPostHeaderPreview.attr("href", "' . get_preview_post_link() . '");
+                        editorPostHeaderPreview.off();
+                        editorPostHeaderPreview.click(false);
+                        editorPostHeaderPreview.on("click", function() {
+                            editorPostSaveDraft.click();
+                            setTimeout(function() { 
+                                const win = window.open("' . get_preview_post_link() . '", "_blank");
+                                if (win) {
+                                    win.focus();
+                                }
+                            }, 1000);
+                        });
+                    }
+                }
+            });
+        </script>';
+    }
+
 	/**
 	 * Add CORS HTTP Header
 	 *
