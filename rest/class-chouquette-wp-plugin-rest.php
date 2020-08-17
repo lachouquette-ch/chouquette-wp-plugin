@@ -340,7 +340,8 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_route('wp/v2', '/fiches/(?P<id>\d+)/report', array(
 			'methods' => 'POST',
-			'callback' => 'send_report'
+			'callback' => 'send_report',
+            'permission_callback' => '__return_true'
 		));
 	}
 
@@ -462,7 +463,8 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_route('wp/v2', '/fiches/(?P<id>\d+)/contact', array(
 			'methods' => 'POST',
-			'callback' => 'send_contact'
+			'callback' => 'send_contact',
+            'permission_callback' => '__return_true'
 		));
 	}
 
@@ -515,7 +517,8 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_route('wp/v2', '/users/team', array(
 			'methods' => 'GET',
-			'callback' => 'get_team_members'
+			'callback' => 'get_team_members',
+            'permission_callback' => '__return_true'
 		));
 	}
 

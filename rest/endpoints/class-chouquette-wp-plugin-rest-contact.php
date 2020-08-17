@@ -14,7 +14,8 @@ class Chouquette_WP_Plugin_Rest_Contact extends WP_REST_Controller
 		register_rest_route($namespace, '/' . $base, array(
 			array(
 				'methods' => WP_REST_Server::CREATABLE,
-				'callback' => array($this, 'send_message')
+				'callback' => array($this, 'send_message'),
+                'permission_callback' => '__return_true'
 			)
 		));
 	}

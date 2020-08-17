@@ -18,7 +18,8 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_items'),
-				'args' => array(),
+                'permission_callback' => '__return_true',
+				'args' => array()
 			)
 		));
 		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)', array(
@@ -32,17 +33,19 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item'),
+                'permission_callback' => '__return_true',
 				'args' => array(
 					'context' => array(
 						'default' => 'view',
 					),
-				),
+				)
 			)
 		));
 		register_rest_route($namespace, '/' . $base . '/fiche', array(
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item_for_fiches'),
+                'permission_callback' => '__return_true',
 				'args' => array(
 					'context' => array(
 						'default' => 'view',
@@ -69,6 +72,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item_for_fiche'),
+                'permission_callback' => '__return_true',
 				'args' => array(
 					'context' => array(
 						'default' => 'view',
@@ -87,6 +91,7 @@ class Chouquette_WP_Plugin_Rest_Criteria extends WP_REST_Controller
 			array(
 				'methods' => WP_REST_Server::READABLE,
 				'callback' => array($this, 'get_item_for_category'),
+                'permission_callback' => '__return_true',
 				'args' => array(
 					'context' => array(
 						'default' => 'view',
