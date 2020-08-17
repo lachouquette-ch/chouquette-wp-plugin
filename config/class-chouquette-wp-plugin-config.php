@@ -126,16 +126,23 @@ class Chouquette_WP_Plugin_Config
     }
 
 	/**
-	 * Add CORS HTTP Header
+	 * Add CORS HTTP Headers
 	 *
 	 * @since 1.0.0
 	 */
-	public function add_cors_http_header()
+	public function add_cors_http_headers()
 	{
 
-		header("Access-Control-Allow-Headers: X-WP-Nonce", false);
+	    $origin = get_http_origin();
+        $allowed_origins = [ CQ_FRONTEND_DOMAIN, get_home_url() ];
 
-	}
+        if ($origin && in_array($origin, $allowed_origins)) {
+            header("Access-Control-Allow-Origin: " . $origin);
+            header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+            header("Access-Control-Allow-Credentials: true");
+            header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization, X-WP-Nonce');
+        }
 
+    }
 
 }

@@ -121,7 +121,10 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('admin_footer', $plugin_config, 'fix_preview_link_on_draft');
 
-		$this->loader->add_action('rest_pre_serve_request', $plugin_config, 'add_cors_http_header');
+        // remove current filter
+		remove_filter( 'rest_pre_serve_request', 'rest_send_cors_headers' );
+
+		$this->loader->add_action('rest_pre_serve_request', $plugin_config, 'add_cors_http_headers', 15);
 
 	}
 
