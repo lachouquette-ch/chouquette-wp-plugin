@@ -77,6 +77,7 @@ class Chouquette_WP_Plugin_Elasticsearch_Fiche
         }
 
         $result = [
+            'id' => $fiche->ID,
             'date' => $fiche->post_date,
             'content' => $fiche->post_content,
             'title' => $fiche->post_title,
