@@ -71,7 +71,8 @@ class Chouquette_WP_Plugin_Elasticsearch_Fiche
                     'criteria_label' => $criteria['label'],
                     'term_id' => $term->term_id,
                     'term_name' => $term->name,
-                    'term_slug' => $term->slug
+                    'term_slug' => $term->slug,
+                    'criteria_term' => $criteria['taxonomy'].'_'.$term->slug
                 );
             }
         }
