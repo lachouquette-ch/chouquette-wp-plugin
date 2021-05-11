@@ -332,7 +332,7 @@ class Chouquette_WP_Plugin_Rest
 			} else {
 				return new WP_Error(
 					'rest_fiche_report_send',
-					json_encode(__('Ton email n\'a pas pu être envoyé. Merci de réessayé plus tard ou de nous contact si l\'erreur persiste. On ets désolé, snif !')),
+					json_encode(__("Ton email n'a pas pu être envoyé. Merci de réessayé plus tard ou de nous contact si l'erreur persiste. On est désolé, snif !")),
 					array('status' => 500)
 				);
 			}

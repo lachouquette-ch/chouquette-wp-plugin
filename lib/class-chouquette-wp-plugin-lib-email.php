@@ -80,6 +80,7 @@ EOT;
 		/* Headers */
 		$headers = array(
 			"Content-Type: text/html; charset=UTF-8",
+			"From: {$from}",
 			"Reply-To: {$from_name} <{$from}>"
 		);
 		if (MAIL_BCC_FALLBACK) {
@@ -89,7 +90,33 @@ EOT;
 			$to = MAIL_FALLBACK;
 		}
 
-		return wp_mail($to, $subject, $body, $headers);
+        /**
+         * Display errors
+         */
+        if ( ! function_exists('debug_wpmail') ) :
+
+            function debug_wpmail( $result = false ) {
+
+                if ( $result )
+                    return;
+
+                global $ts_mail_errors, $phpmailer;
+
+                if ( ! isset($ts_mail_errors) )
+                    $ts_mail_errors = array();
+
+                if ( isset($phpmailer) )
+                    $ts_mail_errors[] = $phpmailer->ErrorInfo;
+
+                error_log('<pre>');
+                error_log(implode (" - ", $ts_mail_errors));
+                error_log('</pre>');
+            }
+        endif;
+
+		$res = wp_mail($to, $subject, $body, $headers);
+        if (!$res) debug_wpmail($res); // write to error log
+		return $res;
 	}
 
 }
