@@ -22,7 +22,7 @@ class Chouquette_WP_Plugin_Lib_Taxonomy
 
 		$result = array();
 
-		if ($queryParams['filter']) {
+		if (isset($queryParams['filter'])) {
 			foreach ($queryParams['filter'] as $criteria => $terms) {
 				$result[$criteria] = explode(',', $terms);
 			}
