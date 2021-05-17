@@ -36,15 +36,19 @@ class Chouquette_WP_Plugin_Rest_Contact extends WP_REST_Controller
 			);
 		}
 
-		if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
-			return new WP_Error(
-				'rest_contact_recaptcha_invalid',
-				__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
-				array('status' => 412)
-			);
-		}
+        try {
+            if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+                return new WP_Error(
+                    'rest_contact_recaptcha_invalid',
+                    __("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
+                    array('status' => 412)
+                );
+            }
+        } catch (Chouquette_WP_Plugin_Lib_Recaptcha_Exception $e) {
+            return new WP_Error('rest_fiche_recaptcha_error', $e->getMessage(), array('status' => 500));
+        }
 
-		switch ($request->get_param('to')) {
+        switch ($request->get_param('to')) {
 			case "hello":
 				$contact_mail = "hello@lachouquette.ch";
 				break;

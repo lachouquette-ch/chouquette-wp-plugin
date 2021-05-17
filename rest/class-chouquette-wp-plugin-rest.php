@@ -309,13 +309,17 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 
-			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
-				return new WP_Error(
-					'rest_fiche_recaptcha_invalid',
-					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
-					array('status' => 412)
-				);
-			}
+            try {
+                if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+                    return new WP_Error(
+                        'rest_fiche_recaptcha_invalid',
+                        __("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
+                        array('status' => 412)
+                    );
+                }
+            } catch (Chouquette_WP_Plugin_Lib_Recaptcha_Exception $e) {
+			    return new WP_Error('rest_fiche_recaptcha_error', $e->getMessage(), array('status' => 500));
+            }
 
 			$fiche_title = get_the_title($request->get_param('id'));
 
@@ -422,15 +426,19 @@ class Chouquette_WP_Plugin_Rest
 				);
 			}
 
-			if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
-				return new WP_Error(
-					'rest_fiche_recaptcha_invalid',
-					__("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
-					array('status' => 412)
-				);
-			}
+            try {
+                if (!Chouquette_WP_Plugin_Lib_Recaptcha::validateRecaptchaToken($request->get_param('recaptcha'))) {
+                    return new WP_Error(
+                        'rest_fiche_recaptcha_invalid',
+                        __("Le filtre anti-spam (recaptcha) n'a pas accepté ton message. Merci de re-essayer."),
+                        array('status' => 412)
+                    );
+                }
+            } catch (Chouquette_WP_Plugin_Lib_Recaptcha_Exception $e) {
+                return new WP_Error('rest_fiche_recaptcha_error', $e->getMessage(), array('status' => 500));
+            }
 
-			$fiche_email = get_field('mail', $request->get_param('id'));
+            $fiche_email = get_field('mail', $request->get_param('id'));
 			if (empty($fiche_email)) {
 				return new WP_Error(
 					'rest_fiche_contact_mail',
