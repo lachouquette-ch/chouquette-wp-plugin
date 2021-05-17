@@ -66,9 +66,6 @@ class Chouquette_WP_Plugin_Rest_Contact extends WP_REST_Controller
 				);
 		};
 
-		print_r($request);
-		echo($contact_mail);
-
 		$result = Chouquette_WP_Plugin_Lib_Email::send_mail(
 			$request->get_param('name'),
 			$request->get_param('email'),
