@@ -12,7 +12,7 @@
  * @wordpress-plugin
  * Plugin Name: Chouquette Wordpress Plugin
  * Description: Everything needed to integration Wordpress in the Chouquette ecosystem : custom post types, hooks, rest endpoints. The instance must be pre-initialize with proper register fields and taxonomies
- * Version: 1.0.0
+ * Version: 1.2.0
  * Author: Fabrice Douchant <fabrice.douchant@gmail.com>
  * License: La Chouquette all right reserved
  * Copyright: Fabrice Douchant
@@ -27,7 +27,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define('CHOUQUETTE_WP_PLUGIN_VERSION', '1.0.0');
+define('CHOUQUETTE_WP_PLUGIN_VERSION', '1.2.0');
 
 /**
  * The code that runs during plugin activation.
