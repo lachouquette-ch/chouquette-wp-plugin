@@ -17,9 +17,11 @@ class Chouquette_WP_Plugin_Lib_Category
 	const SHOPPING = 'shopping';
 	const SERVICES = 'services';
 
+	const CQ_CATEGORY_LOGOS = 'logos';
 	const CQ_CATEGORY_LOGO_YELLOW = 'logo_yellow';
 	const CQ_CATEGORY_LOGO_WHITE = 'logo_white';
 	const CQ_CATEGORY_LOGO_BLACK = 'logo_black';
+	const CQ_CATEGORY_LOGO_MARKERS = 'marqueurs';
 	const CQ_CATEGORY_LOGO_MARKER_YELLOW = 'marker_yellow';
 	const CQ_CATEGORY_LOGO_MARKER_WHITE = 'marker_white';
 
@@ -105,13 +107,14 @@ class Chouquette_WP_Plugin_Lib_Category
 	 */
 	public static function get_marker_icon(object $category, bool $is_chouquettise)
 	{
+        $category_markers = get_field(self::CQ_CATEGORY_LOGO_MARKERS, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+
 		if ($is_chouquettise) {
-			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_YELLOW, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+			$icon_id = $category_markers[self::CQ_CATEGORY_LOGO_MARKER_YELLOW];
 		} else {
-			$icon_id = get_field(self::CQ_CATEGORY_LOGO_MARKER_WHITE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+            $icon_id = $category_markers[self::CQ_CATEGORY_LOGO_MARKER_WHITE];
 		}
-		$image_src = wp_get_attachment_image_src($icon_id, 'full')[0];
-		return $image_src;
+		return wp_get_attachment_image_src($icon_id, 'full')[0];
 	}
 
 	/**
@@ -125,15 +128,17 @@ class Chouquette_WP_Plugin_Lib_Category
 	 */
 	public static function get_logo(object $category, string $color = 'yellow', string $size = 'thumbnail')
 	{
+	    $category_logos = get_field(self::CQ_CATEGORY_LOGOS, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+
 		switch ($color) {
 			case 'white':
-				$logo_id = get_field(self::CQ_CATEGORY_LOGO_WHITE, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				$logo_id = $category_logos[self::CQ_CATEGORY_LOGO_WHITE];
 				break;
 			case 'black':
-				$logo_id = get_field(self::CQ_CATEGORY_LOGO_BLACK, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				$logo_id = $category_logos[self::CQ_CATEGORY_LOGO_BLACK];
 				break;
 			case 'yellow':
-				$logo_id = get_field(self::CQ_CATEGORY_LOGO_YELLOW, Chouquette_WP_Plugin_Lib_ACF::generate_post_id($category));
+				$logo_id = $category_logos[self::CQ_CATEGORY_LOGO_YELLOW];
 				break;
 			default:
 				throw new Exception("$color is undefined");
