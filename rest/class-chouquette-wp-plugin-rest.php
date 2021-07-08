@@ -523,7 +523,7 @@ class Chouquette_WP_Plugin_Rest
 			return $data;
 		}
 
-		register_rest_route('wp/v2', '/users/team', array(
+		register_rest_route('wp/v2', '/team', array(
 			'methods' => 'GET',
 			'callback' => 'get_team_members',
             'permission_callback' => '__return_true'
