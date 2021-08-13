@@ -354,12 +354,56 @@ class Chouquette_WP_Plugin_Rest
 	 *
 	 * @since 1.0.0
 	 */
-	public function fiche_sort_by_chouquettise_filter($args, $request)
+	public function fiche_chouquettise_filter($args, $request)
 	{
-		$args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO;
-		$args['meta_type'] = 'DATE';
-		$args['orderby'] = 'meta_value date';
-		$args['order'] = 'DESC DESC';
+	    $sort_by_chouquettisation = true;
+
+        $params = $request->get_params();
+        if( isset($params['chouquettise']) ) {
+            if (isset ($args['meta_query'])) {
+                return new WP_Error(
+                    'meta_query_already_set',
+                    __("Il existe déjà une meta query pour cette requete"),
+                    array('status' => 500)
+                );
+            }
+            switch ($params['chouquettise']) {
+                case 'only':
+                    $args['meta_query'] = array(
+                        array(
+                            'key' => Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO,
+                            'value' => date('Ymd'),
+                            'compare' => '>=',
+                            'type' => 'DATE'
+                        ),
+                    );
+                    break;
+                case 'none':
+                    $args['meta_query'] = array(
+                        'relation' => 'OR',
+                        array(
+                            'key' => Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO,
+                            'value' => '',
+                            'compare' => '=',
+                        ),
+                        array(
+                            'key' => Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO,
+                            'value' => date('Ymd'),
+                            'compare' => '<',
+                            'type' => 'DATE'
+                        ),
+                    );
+                    $sort_by_chouquettisation = false; // do not sort since won't be queries
+                    break;
+            }
+        }
+
+        if ($sort_by_chouquettisation) {
+            $args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_FROM;
+            $args['meta_type'] = 'DATE';
+            $args['orderby'] = 'meta_value date';
+            $args['order'] = 'DESC DESC';
+        }
 
 		return $args;
 	}
@@ -615,6 +659,6 @@ class Chouquette_WP_Plugin_Rest
 
 		return $results;
 
-	}
+    }
 
 }

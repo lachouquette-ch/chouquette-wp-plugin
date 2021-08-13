@@ -138,7 +138,7 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_filter('rest_pre_insert_comment', $plugin_rest, 'validate_comment_recaptcha', 10, 2);
 
-		$this->loader->add_filter('rest_fiche_query', $plugin_rest, 'fiche_sort_by_chouquettise_filter', 10, 2);
+		$this->loader->add_filter('rest_fiche_query', $plugin_rest, 'fiche_chouquettise_filter', 10, 2);
 
 		$this->loader->add_filter('rest_fiche_query', $plugin_rest, 'fiche_category_criteria_filter', 10, 2);
 
