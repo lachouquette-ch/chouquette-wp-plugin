@@ -399,7 +399,7 @@ class Chouquette_WP_Plugin_Rest
         }
 
         if ($sort_by_chouquettisation) {
-            $args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_FROM;
+            $args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO;
             $args['meta_type'] = 'DATE';
             $args['orderby'] = 'meta_value date';
             $args['order'] = 'DESC DESC';
