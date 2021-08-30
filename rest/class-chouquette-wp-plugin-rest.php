@@ -408,17 +408,28 @@ class Chouquette_WP_Plugin_Rest
 		return $args;
 	}
 
+    /**
+     * Filter all post types using category (with subcategory included)
+     *
+     * @param $args
+     * @param $request
+     */
+	public function category_and_children_filter($args, $request)
+    {
+        if ($request['category']) {
+            $args['category_name'] = $request['category'];
+        }
+
+        return $args;
+    }
+
 	/**
-	 * Filter fiches using category (with subcategory included) and chouquette taxonomies
+	 * Filter fiches using chouquette taxonomies
 	 *
 	 * @since 1.0.0
 	 */
 	public function fiche_category_criteria_filter($args, $request)
 	{
-		if ($request['category']) {
-			$args['category_name'] = $request['category'];
-		}
-
 		$args['tax_query'] = array('relation' => 'AND');
 
 		if ($request['location']) {
