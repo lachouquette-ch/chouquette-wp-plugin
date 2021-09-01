@@ -217,6 +217,21 @@ class Chouquette_WP_Plugin_Rest
      *
      * @since    1.0.0
      */
+    public function category_logo_links($results)
+    {
+        foreach ($results->data['logos'] as $logoName => $logoId){
+            if ($logoId) {
+                $results->add_link("{$logoName}", rest_url('/wp/v2/media/' . $logoId), array('embeddable' => true));
+            }
+        }
+        return $results;
+    }
+
+    /**
+     * Add icon link to value with embedded so we can directly fetch icon image
+     *
+     * @since    1.0.0
+     */
     public function value_icon_link($results)
     {
         $results->add_link('icon', rest_url('/wp/v2/media/' . $results->data['icon']), array('embeddable' => true));
