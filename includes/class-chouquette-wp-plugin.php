@@ -148,11 +148,15 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('rest_prepare_fiche', $plugin_rest, 'fiche_criteria_link', 10, 1);
 
+		$this->loader->add_action('rest_prepare_cq_values', $plugin_rest, 'value_icon_link', 10, 1);
+
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'post_top_categories');
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'post_co_authors', 20, 1);
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'category_logos');
+
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'value_icon');
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'fiche_info');
 

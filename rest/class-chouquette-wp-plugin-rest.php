@@ -188,7 +188,7 @@ class Chouquette_WP_Plugin_Rest
     }
 
 	/**
-	 * Add logo fields to categories (though logos attribute).
+	 * Add logos field to categories
 	 *
 	 * @since    1.0.0
 	 */
@@ -211,6 +211,38 @@ class Chouquette_WP_Plugin_Rest
 		));
 
 	}
+
+    /**
+     * Add icon link to value with embedded so we can directly fetch icon image
+     *
+     * @since    1.0.0
+     */
+    public function value_icon_link($results)
+    {
+        $results->add_link('icon', rest_url('/wp/v2/media/' . $results->data['icon']), array('embeddable' => true));
+
+        return $results;
+    }
+
+    /**
+     * Add icon field to values
+     *
+     * @since    1.0.0
+     */
+    public function value_icon()
+    {
+        register_rest_field('cq_values', 'icon', array(
+            'get_callback' => function ($value_arr) {
+                $fields = get_field_object('icon', "cq_values_{$value_arr['id']}");
+                return $fields['value'];
+            },
+            'schema' => array(
+                'description' => __('Value icon'),
+                'type' => 'array',
+                'items' => 'number'
+            ),
+        ));
+    }
 
 	/**
 	 * Validate the comment with recatpcha v3 token
