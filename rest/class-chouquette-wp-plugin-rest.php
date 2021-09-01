@@ -133,7 +133,7 @@ class Chouquette_WP_Plugin_Rest
 
 		register_rest_field('post', 'top_categories', array(
 			'get_callback' => function ($post_arr) {
-				$categories = Chouquette_WP_Plugin_Lib_Category::get_by_post($post_arr['id']);
+			    $categories = Chouquette_WP_Plugin_Lib_Category::get_by_post($post_arr['id']);
 
 				return array_map(function ($category) {
 					return $category->term_id;
@@ -149,6 +149,43 @@ class Chouquette_WP_Plugin_Rest
 		));
 
 	}
+
+    /**
+     * Register the co-authors fields for posts.
+     *
+     * @since    1.0.0
+     */
+    public function post_co_authors()
+    {
+
+        register_rest_field('post', 'coauthors', array(
+            'get_callback' => function ($post_arr) {
+                $result = array();
+                $co_authors = new CoAuthorsIterator($post_arr['id']);
+                $co_authors->iterate();
+                do {
+                    $author = array(
+                        "id" => $co_authors->current_author->ID,
+                        "name" => $co_authors->current_author->display_name,
+                        "username" => $co_authors->current_author->user_login,
+                        "description" => $co_authors->current_author->description,
+                        "avatar" => get_avatar_data( $co_authors->current_author->ID )['url'],
+                    );
+                    $result[] = $author;
+                } while ($co_authors->iterate());
+
+                return $result;
+            },
+            'schema' => array(
+                'description' => __('Get all co authors for post'),
+                'type' => 'array',
+                'items' => array(
+                    'type' => 'Object'
+                )
+            ),
+        ));
+
+    }
 
 	/**
 	 * Add logo fields to categories (though logos attribute).
