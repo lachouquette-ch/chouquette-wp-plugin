@@ -64,6 +64,12 @@ class Chouquette_WP_Plugin_Lib_Category
 	 */
 	public static function get_by_post(int $id, int $parent_id = null)
 	{
+        // first try to get post primary category
+        $post_category_id = get_post_meta($id, self::YOAT_PRIMARY_CATEGORY_META_KEY, true);
+        if ($post_category_id) {
+            return array(get_category($post_category_id));
+        }
+
 		// get fiche
 		$linkFiches = Chouquette_WP_Plugin_Lib_Fiche::get_all_by_post($id);
 		if (!empty($linkFiches)) {
