@@ -434,11 +434,13 @@ class Chouquette_WP_Plugin_Rest
 	}
 
 	/**
-	 * Basic filter to force fiche to be sorted by Chouquettisation (first Chouquettise by date then the others)
-	 *
+	 * Filter and sorting mechanism for Chouquettisation
+	 * Filter : using query param "chouquettise". Values are : only (only Chouquettises) or none (no Chouquettise)
+     * Sorting : by default, sorting Chouquettises first. To disable this feature, use the query param "chouquettise_unsort" to "true" (value is not discard)
+     *
 	 * @since 1.0.0
 	 */
-	public function fiche_chouquettise_filter($args, $request)
+	public function fiche_chouquettise_filter_and_sort($args, $request)
 	{
 	    $sort_by_chouquettisation = true;
 
@@ -452,7 +454,7 @@ class Chouquette_WP_Plugin_Rest
                 );
             }
             switch ($params['chouquettise']) {
-                case 'only':
+                case 'only': // ony chouquettise
                     $args['meta_query'] = array(
                         array(
                             'key' => Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO,
@@ -462,7 +464,7 @@ class Chouquette_WP_Plugin_Rest
                         ),
                     );
                     break;
-                case 'none':
+                case 'none': // no chouquettise
                     $args['meta_query'] = array(
                         'relation' => 'OR',
                         array(
@@ -482,7 +484,8 @@ class Chouquette_WP_Plugin_Rest
             }
         }
 
-        if ($sort_by_chouquettisation) {
+        // discard sorting if chouquettise_unsort is set
+        if ($sort_by_chouquettisation && !isset($params['chouquettise_unsort'])) {
             $args['meta_key'] = Chouquette_WP_Plugin_Lib_Fiche::CHOUQUETTISE_TO;
             $args['meta_type'] = 'DATE';
             $args['orderby'] = 'meta_value date';
