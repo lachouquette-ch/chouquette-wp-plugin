@@ -346,14 +346,15 @@ class Chouquette_WP_Plugin_Rest
 			'get_callback' => function ($fiche_arr) {
 				$fiche_id = $fiche_arr['id'];
 
-				$category = Chouquette_WP_Plugin_Lib_Category::get_by_post($fiche_id)[0];
+                $primary_category_id = get_post_meta($fiche_id, Chouquette_WP_Plugin_Lib_Category::YOAT_PRIMARY_CATEGORY_META_KEY, true);
+				$category = get_category($primary_category_id);
 				$is_chouquettise = Chouquette_WP_Plugin_Lib_Fiche::is_chouquettise($fiche_id);
 
 				$data = array();
-				$data['id'] = $category->term_id;
-				$data['slug'] = $category->slug;
-				$data['name'] = $category->name;
 				if ($category) {
+                    $data['id'] = $category->term_id;
+                    $data['slug'] = $category->slug;
+                    $data['name'] = $category->name;
                     $data['marker_icon'] = Chouquette_WP_Plugin_Lib_Category::get_marker_icon($category, $is_chouquettise);
                     $data['logo'] = Chouquette_WP_Plugin_Lib_Category::get_logo($category, 'black');
                 }
