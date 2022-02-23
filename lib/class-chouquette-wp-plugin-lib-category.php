@@ -40,7 +40,7 @@ class Chouquette_WP_Plugin_Lib_Category
         // first try to get post primary category
         $yoast_category_id = get_post_meta($id, self::YOAT_PRIMARY_CATEGORY_META_KEY, true);
         $primary_category = get_category($yoast_category_id);
-        $categories = $primary_category ? array($primary_category) : get_categories(array('object_ids' => $id));
+        $categories = $primary_category && !is_wp_error($primary_category) ? array($primary_category) : get_categories(array('object_ids' => $id));
 
 		$result = array();
 		foreach ($categories as $category) {
