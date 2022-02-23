@@ -37,10 +37,7 @@ class Chouquette_WP_Plugin_Lib_Category
 	 */
 	public static function get_all_by_post(int $id)
 	{
-        // first try to get post primary category
-        $yoast_category_id = get_post_meta($id, self::YOAT_PRIMARY_CATEGORY_META_KEY, true);
-        $primary_category = get_category($yoast_category_id);
-        $categories = $primary_category && !is_wp_error($primary_category) ? array($primary_category) : get_categories(array('object_ids' => $id));
+        $categories = Chouquette_WP_Plugin_Lib_Category::get_by_post($id);
 
 		$result = array();
 		foreach ($categories as $category) {
@@ -55,6 +52,21 @@ class Chouquette_WP_Plugin_Lib_Category
 		return $result;
 
 	}
+
+    /**
+     * Get all active categories for a given post
+     * If primary category exists, return only this one
+     *
+     * @param int $id the post/fiche id
+     * @return array a unique array of post categories
+     */
+    public static function get_by_post(int $id)
+    {
+        // first try to get post primary category
+        $yoast_category_id = get_post_meta($id, self::YOAT_PRIMARY_CATEGORY_META_KEY, true);
+        $primary_category = get_category($yoast_category_id);
+        return $primary_category && !is_wp_error($primary_category) ? array($primary_category) : get_categories(array('object_ids' => $id));
+    }
 
 	/**
 	 * Get the category marker logo
