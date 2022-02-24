@@ -29,7 +29,7 @@ class Chouquette_WP_Plugin_Rest_Theme extends WP_REST_Controller
 	public function mods($request)
 	{
         $result = array(
-            'system_text' => get_theme_mod('la_chouquette_system_text')
+            'systemText' => get_theme_mod('la_chouquette_system_text')
         );
 
 		return new WP_REST_Response($result);
