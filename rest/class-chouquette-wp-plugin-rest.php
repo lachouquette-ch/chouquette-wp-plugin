@@ -72,9 +72,11 @@ class Chouquette_WP_Plugin_Rest
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-criteria.php';
 		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-contact.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'rest/endpoints/class-chouquette-wp-plugin-rest-theme.php';
 
 		$this->criteria_controller = new Chouquette_WP_Plugin_Rest_Criteria();
 		$this->contact_controller = new Chouquette_WP_Plugin_Rest_Contact();
+		$this->theme_controller = new Chouquette_WP_Plugin_Rest_Theme();
 
 	}
 
@@ -122,6 +124,16 @@ class Chouquette_WP_Plugin_Rest
 	{
 		return $this->contact_controller->register_routes();
 	}
+
+    /**
+     * Register routes for theme controller
+     *
+     * @since 1.0.0
+     */
+    public function register_theme_routes()
+    {
+        return $this->theme_controller->register_routes();
+    }
 
 	/**
 	 * Register the google map API key to the acf fields plugin.

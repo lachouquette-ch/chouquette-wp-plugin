@@ -174,6 +174,8 @@ class Chouquette_WP_Plugin
 
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'register_contact_routes');
 
+		$this->loader->add_action('rest_api_init', $plugin_rest, 'register_theme_routes');
+
 		$this->loader->add_action('rest_api_init', $plugin_rest, 'user_members');
 
 	}
