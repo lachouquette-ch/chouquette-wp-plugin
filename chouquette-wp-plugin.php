@@ -27,7 +27,7 @@ if (!defined('WPINC')) {
 /**
  * Currently plugin version.
  */
-define('CHOUQUETTE_WP_PLUGIN_VERSION', '1.2.0');
+define('CHOUQUETTE_WP_PLUGIN_VERSION', '2.0.0');
 
 /**
  * The code that runs during plugin activation.
