@@ -534,18 +534,23 @@ class Chouquette_WP_Plugin_Rest
 	 */
 	public function fiche_category_criteria_filter($args, $request)
 	{
-		$args['tax_query'] = array('relation' => 'AND');
-
-		if ($request['location']) {
-			$args['tax_query'][] = array(
-				'taxonomy' => 'cq_location',
-				'field' => 'slug',
-				'terms' => explode(',', $request['location'])
-			);
-		}
-
 		$cq_taxonomies = Chouquette_WP_Plugin_Lib_Taxonomy::chouquette_taxonomy_query_filter($request->get_query_params());
 
+        // create new tax_query if needed only
+        if ($request['location'] || !empty($cq_taxonomies)) {
+            $args['tax_query'] = array('relation' => 'AND');
+        }
+
+        // populate with location
+        if ($request['location']) {
+            $args['tax_query'][] = array(
+                'taxonomy' => 'cq_location',
+                'field' => 'slug',
+                'terms' => explode(',', $request['location'])
+            );
+        }
+
+        // populate with taxonomies
 		if (!empty($cq_taxonomies)) {
 			foreach ($cq_taxonomies as $taxonomy => $terms) {
 				$args['tax_query'][] = array(
