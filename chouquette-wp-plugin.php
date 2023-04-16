@@ -1,22 +1,10 @@
 <?php
 
-/**
- * Chouquette Wordpress Plugin
- *
- * The Plugin provides all necessary custom post types, hooks and rest endpoints for La Chouquette plateform
- * Project structure inspired by https://github.com/DevinVinson/WordPress-Plugin-Boilerplate
- *
- * @since    1.0.0
- * @package Chouquette_WP_Plugin
- *
- * @wordpress-plugin
- * Plugin Name: Chouquette Wordpress Plugin
- * Description: Everything needed to integration Wordpress in the Chouquette ecosystem : custom post types, hooks, rest endpoints. The instance must be pre-initialize with proper register fields and taxonomies
- * Version: 2.0.0
- * Author: Fabrice Douchant <fabrice.douchant@gmail.com>
- * License: La Chouquette all right reserved
- * Copyright: Fabrice Douchant
- * Text Domain: chouquette
+/*
+ * Copyright (c) 2023 by Fabrice Douchant <fabrice.douchant@gmail.com>.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 // exit if accessed directly
